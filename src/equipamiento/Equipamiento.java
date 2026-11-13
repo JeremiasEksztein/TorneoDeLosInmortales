@@ -1,4 +1,7 @@
 package equipamiento;
+
+import combatientes.Combatiente;
+
 public abstract class Equipamiento {
 
     private String nombre;
@@ -48,5 +51,18 @@ public abstract class Equipamiento {
     public TipoEquipamiento getTipo() {
         return tipo;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+		if(this == o) {
+			return true;
+		}
+		if(o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
+		Equipamiento e = (Equipamiento) o;
+		return this.nombre.equals(e.nombre);
+    }
+    
 }
 
