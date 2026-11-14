@@ -1,5 +1,9 @@
 package equipamiento;
 
-public class EspadaCelestial {
-	private int BONO_DAÑO;
+public class EspadaCelestial extends Equipamiento{
+	private static final int  BONO_DAÑO=10; 
+	
+	public EspadaCelestial() {
+        super("Espada Celestial", TipoEquipamiento.ARMA, BONO_DAÑO, 0, 0, 0);
+	}
 }

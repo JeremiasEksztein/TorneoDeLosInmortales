@@ -9,18 +9,17 @@ public abstract class Equipamiento {
     private int daño;
     private int dañoRecibido;
     private int vidaMaxima;
-    private int energia;
     private int energiaMaxima;
 
     protected Equipamiento(String nombre, TipoEquipamiento tipo, int daño,
-                           int dañoRecibido, int vidaMaxima, int energia,
+                           int dañoRecibido, int vidaMaxima,
                            int energiaMaxima) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.daño = daño;
         this.dañoRecibido = dañoRecibido;
         this.vidaMaxima = vidaMaxima;
-        this.energia = energia;
+        
         this.energiaMaxima = energiaMaxima;
     }
 
@@ -30,10 +29,6 @@ public abstract class Equipamiento {
 
     public int getDaño() {
         return daño;
-    }
-
-    public int getEnergia() {
-        return energia;
     }
 
     public int getDañoRecibido() {

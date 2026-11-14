@@ -1,5 +1,9 @@
 package equipamiento;
 
-public class SelloDelFenix {
-	private int AUMENTO_VIDA_MAX;	
+public class SelloDelFenix extends Equipamiento{
+	private static final int  AUMENTO_VIDA_MAX=30;	
+	
+	public SelloDelFenix() {
+        super("Sello Del Fenix", TipoEquipamiento.SELLO, 0, 0, AUMENTO_VIDA_MAX, 0);
+	}
 }

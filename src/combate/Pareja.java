@@ -31,5 +31,21 @@ public class Pareja {
 	public Combatiente getCombatienteB() {
 		return this.combatienteB;
 	}
-	//falta el equals y hashcode
+	
+	@Override 
+	public boolean equals(Object o) {
+		if(this == o) {
+			return true;
+		}
+		if(o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
+		Pareja p = (Pareja) o;
+		return this.id == p.id;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Integer.hashCode(this.id);
+	}
 }
