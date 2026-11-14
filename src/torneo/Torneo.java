@@ -4,6 +4,7 @@ import java.util.List;
 
 import combate.Pareja;
 import combatientes.Combatiente;
+import eventos.Interesado;
 
 public class Torneo {
 	private List<Pareja> parejasInscriptas;
@@ -27,7 +28,8 @@ public class Torneo {
 	public void notificarInteresado() {
 		
 	}
-	public Combatiente getCampeon() {
+	public Pareja getCampeon() {
+		return parejasInscriptas.getFirst();
 		
 	}
 	public void registrarInteresados() {

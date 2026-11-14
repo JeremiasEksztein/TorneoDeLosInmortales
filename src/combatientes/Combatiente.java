@@ -14,7 +14,7 @@ import excepciones.EquipamientoInvalidoException;
 import tecnicas.Accion;
 import tecnicas.Tecnica;
 
-public abstract class Combatiente {
+public abstract class Combatiente implements Comparable<Combatiente> {
 	protected final int id;
 	private CriterioAccion criterio;
 	private String nombre;
@@ -70,70 +70,40 @@ public abstract class Combatiente {
 		}
 	}
 	
-	public abstract void aprender(Tecnica t) {
-		
-	}
-	public abstract Accion elegirAccion(Pareja p) {
-		return Accion;
-	}
-	public abstract void recibirDaño(int n) {
-		
-	}
-	public abstract  void recuperarVida(int n) {
-		
-	}
-	public abstract  void gastarEnergia(int n) {
-		
-	}
-	public abstract  void quitarEnergia(int n) {
-		
-	}
-	public abstract void  recuperarEnergia(int n) {
-		
-	}
-	public abstract void registrarUso(Tecnica t) {
-		
-	}
-	public abstract int usosRestantes(Tecnica t) {
-		
-	}
-	public abstract boolean usoEnEsteCombate(Tecnica t) {
-		
-	}
-	public abstract boolean puedeEjecutar(Tecnica t) {
-		
-	}
-	public abstract void  activarDefensa(int n) {
-		
-	}
-	public abstract boolean tieneDefensaActiva() {
-		
-	}
-	public abstract void reiniciarParaCombate() {
-		
-	}
-	public abstract boolean estaEnPie() {
-		
-	}
-	public abstract boolean faltaVida() {
-		
-	}
-	public abstract int vidaMaxima() {
-		
-	}
-	public abstract int energiaMaxima() {
-		
-	}
-	public abstract List<Equipamiento> getEquipamiento(){
-		
-	}
-	public abstract void setCriterio(Criterio c) {
-		
-	}
+	public abstract void aprender(Tecnica t);
+	public abstract Accion elegirAccion(Pareja p) ;
+	public abstract void recibirDaño(int n);
+	public abstract  void recuperarVida(int n);
+	public abstract  void gastarEnergia(int n) ;
+	public abstract  void quitarEnergia(int n);
+	public abstract void  recuperarEnergia(int n);
+	public abstract void registrarUso(Tecnica t);
+	public abstract int usosRestantes(Tecnica t);
+	public abstract boolean usoEnEsteCombate(Tecnica t);
+	public abstract boolean puedeEjecutar(Tecnica t);
+	public abstract void  activarDefensa(int n);
+	public abstract boolean tieneDefensaActiva();
+	public abstract void reiniciarParaCombate();
+	public abstract boolean estaEnPie();
+	public abstract boolean faltaVida();
+	public abstract int vidaMaxima();
+	public abstract int getVida();
+	public abstract int energiaMaxima();
+	public abstract List<Equipamiento> getEquipamiento();
+	public abstract void setCriterio(CriterioAccion c);
 	public abstract int calcularDañoProvocado() ;
 	public abstract int calcularDañoRecibido(int n);
-	public abstract int calcularCosto(int n) {
-		
+	public abstract int calcularCosto(int n) ;
+	
+	
+	
+	
+	
+	public String getNombre() {
+		return nombre;
+	}
+	public int getId() {
+		return id;
 	}
 	@Override 
 	public boolean equals(Object o) {
@@ -150,5 +120,7 @@ public abstract class Combatiente {
 	public int hashCode() {
 		return Integer.hashCode(this.id);
 	}
+	
+
 
 }

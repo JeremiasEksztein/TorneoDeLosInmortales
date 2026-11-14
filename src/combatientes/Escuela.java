@@ -1,4 +1,6 @@
 package combatientes;
+import java.util.List;
+
 import equipamiento.Equipamiento;
 import tecnicas.Tecnica;
 
@@ -12,7 +14,7 @@ public class Escuela {
 		
 	}
 	public String getNombre() {
-		
+		return this.nombre;
 	}
 	
 }

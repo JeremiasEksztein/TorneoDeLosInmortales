@@ -2,10 +2,6 @@ package tecnicas;
 import combatientes.Combatiente;
 
 public interface Accion {
-	public void ejecutar(Combatiente ejecutor, Combatiente rival) {
-		
-	}
-	public String getNombre() {
-		return this.nombre;
-	}
+	public void ejecutar(Combatiente ejecutor, Combatiente rival) ;
+	public String getNombre();
 }
