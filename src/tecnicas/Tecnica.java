@@ -23,9 +23,7 @@ public abstract class Tecnica {
     }
 
     // Cada técnica concreta actualiza el estado del personaje afectado.
-    public abstract void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
-    	
-    }
+    public abstract void aplicarEfecto(Combatiente ejecutor, Combatiente rival);
 
     public int getCosto() {
         return costo;

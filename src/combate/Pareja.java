@@ -1,5 +1,12 @@
 package combate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+
 import combatientes.Combatiente;
+import tecnicas.Tecnica;
 
 public class Pareja {
 	private int id;
@@ -8,17 +15,55 @@ public class Pareja {
 	
 	
 	public int vidaTotal() {
+		return (combatienteA.getVida() + combatienteB.getVida());
 		
 	}
 	public boolean estaEnPie() {
 		
-	}
-	public void integrantesEnOrden() {
+		if(!combatienteA.estaEnPie()) {
+			if(!combatienteB.estaEnPie())
+				return false;
+		}
+		return true;
 		
 	}
-	public boolean puedeUsar() {
+	
+	// le cambie el tipo porque se usa en "Combate" pero antes devolvia un void
+	public List<Combatiente> integrantesEnOrden() {
+		//No se como implementarla xD
 		
+		return new ArrayList<>();
+				
 	}
+	public boolean puedeUsar(Combatiente ejecutor, Tecnica tecnica) {
+
+		if(ejecutor==null) {
+			throw new IllegalArgumentException("El ejecutor no puede ser nulo.");
+		}
+		
+		if(tecnica==null) {
+			throw new IllegalArgumentException("La técnica no puede ser nula.");
+		}
+        Combatiente companiero = obtenerCompaniero(ejecutor);
+
+        // se bloquea si tu compañero uso la misma tecnica
+        boolean bloqueadaPorCompaniero = companiero.usoEnEsteCombate(tecnica)
+                && companiero.estaEnPie()
+                && companiero.usosRestantes(tecnica) > 0;
+
+        return !bloqueadaPorCompaniero;
+    }
+	
+	private Combatiente obtenerCompaniero(Combatiente ejecutor) {
+        if (ejecutor.equals(combatienteA)) {
+            return combatienteB;
+        }
+        if (ejecutor.equals(combatienteB)) {
+            return combatienteA;
+        }
+        throw new IllegalArgumentException("El combatiente no pertenece a esta pareja.");
+    }
+	
 	public void reiniciarParaCombate() {
 		
 	}
@@ -31,7 +76,10 @@ public class Pareja {
 	public Combatiente getCombatienteB() {
 		return this.combatienteB;
 	}
-	
+	public void recuperarEnergiaAsalto(int eNERGIA_POR_ASALTO) {
+		combatienteA.recuperarEnergia(eNERGIA_POR_ASALTO);
+		combatienteB.recuperarEnergia(eNERGIA_POR_ASALTO);		
+	}
 	@Override 
 	public boolean equals(Object o) {
 		if(this == o) {

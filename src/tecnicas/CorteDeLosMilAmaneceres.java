@@ -9,6 +9,9 @@ public class CorteDeLosMilAmaneceres extends Tecnica {
 		super("Corte de los Mil Amaneceres", 10, TipoTecnica.OFENSIVA);
 	}
 	
+	public CorteDeLosMilAmaneceres(String nombre, int costo, TipoTecnica tipo) {
+		super(nombre, costo, tipo);
+	}
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
 		rival.recibirDaño(DAÑO_BASE);
 	}
