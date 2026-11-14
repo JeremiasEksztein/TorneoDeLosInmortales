@@ -2,10 +2,15 @@ package tecnicas;
 import combatientes.Combatiente;
 
 public class DominioDeLaNada extends Tecnica{
-	private int DAÑO_BASE;
-	private int ENERGIA_QUITADA;
+	private static final int DAÑO_BASE=10;
+	private static final int ENERGIA_QUITADA=10;
+	
+	public DominioDeLaNada() {
+		super("Dominio de la Nada", 15, TipoTecnica.OFENSIVA);
+	}
 	
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
-		
+		rival.quitarEnergia(ENERGIA_QUITADA);
+		rival.recibirDaño(DAÑO_BASE);
 	}
 }
