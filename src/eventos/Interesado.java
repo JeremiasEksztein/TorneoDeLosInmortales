@@ -1,7 +1,6 @@
 package eventos;
 
 public interface Interesado {
-	public void recibir(Acontecimiento a) {
-		
-	}
+
+    void recibir(Acontecimiento a);
 }

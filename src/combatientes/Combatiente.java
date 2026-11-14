@@ -36,7 +36,9 @@ public abstract class Combatiente {
 	private Set<Tecnica> usadasEnCombate;
 	//private List<Tecnica> tecnicas; 
 
-	
+	/*DOC: La vidaMaxima y energía maxima, llegan por parámetro, en lugar
+	 * de estar estar definidas.
+	 */
 	protected Combatiente(int id, String nombre, int vidaMaxima, int energiaMaxima) {
 		this.id = id;
 		this.nombre = nombre;
