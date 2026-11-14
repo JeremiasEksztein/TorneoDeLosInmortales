@@ -76,26 +76,24 @@ public class Pareja {
 	public Combatiente getCombatienteB() {
 		return this.combatienteB;
 	}
-	//falta el equals y hashcode
 	public void recuperarEnergiaAsalto(int eNERGIA_POR_ASALTO) {
 		combatienteA.recuperarEnergia(eNERGIA_POR_ASALTO);
 		combatienteB.recuperarEnergia(eNERGIA_POR_ASALTO);		
 	}
+	@Override 
+	public boolean equals(Object o) {
+		if(this == o) {
+			return true;
+		}
+		if(o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
+		Pareja p = (Pareja) o;
+		return this.id == p.id;
+	}
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(Integer.valueOf(id));
+		return Integer.hashCode(this.id);
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pareja other = (Pareja) obj;
-		return id == other.id;
-	}
-	
-	
 }

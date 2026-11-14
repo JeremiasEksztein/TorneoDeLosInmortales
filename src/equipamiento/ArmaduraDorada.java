@@ -1,5 +1,9 @@
 package equipamiento;
 
-public class ArmaduraDorada {
-	private int REDUCCION_DAÑO_RECIBIDO;
+public class ArmaduraDorada extends Equipamiento{
+	private static final int  REDUCCION_DAÑO_RECIBIDO=10;
+	
+	public ArmaduraDorada() {
+        super("Armadura Dorada", TipoEquipamiento.ARMADURA, 0,REDUCCION_DAÑO_RECIBIDO, 0, 0);
+	}
 }
