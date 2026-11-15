@@ -155,7 +155,7 @@ public class CultivadorDeLaEspada extends Combatiente{
 	}
 
 	@Override
-	public int calcularCosto(int n) {
+	public int calcularCostoEnergia(int n) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
