@@ -3,14 +3,13 @@ import combatientes.Combatiente;
 
 public class RugidoDeLaBestiaPrimordial extends Tecnica{
 
-	private int DAÑO_BASE;
+	private static final int DAÑO_BASE=40;
 	
-	
-	public RugidoDeLaBestiaPrimordial(String nombre, int costo, TipoTecnica tipo) {
-		super(nombre, costo, tipo);
+	public RugidoDeLaBestiaPrimordial() {
+		super("Rugido de la Bestia Primordial", 20, TipoTecnica.OFENSIVA);
 	}
-	
+
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
-		
+		rival.recibirDaño(DAÑO_BASE);
 	}
 }
