@@ -14,6 +14,13 @@ public class Eliminacion extends Acontecimiento {
     }
 
     
+	public Eliminacion(int i, String string) {
+		super(string + " (combatiente " + i + ") queda fuera de combate");
+		this.idCombatiente = i;
+		this.nombre = string;
+	}
+
+
 	public int getIdCombatiente() { return idCombatiente; }
     public String getNombre() { return nombre; }
 }

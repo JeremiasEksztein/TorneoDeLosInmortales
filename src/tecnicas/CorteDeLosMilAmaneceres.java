@@ -13,6 +13,6 @@ public class CorteDeLosMilAmaneceres extends Tecnica {
 		super(nombre, costo, tipo);
 	}
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
-		rival.recibirDaño(DAÑO_BASE);
+		rival.recibirDanio(DAÑO_BASE);
 	}
 }

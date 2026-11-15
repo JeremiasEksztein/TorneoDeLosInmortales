@@ -7,7 +7,7 @@ class EliminacionTest {
 
     @Test
     void guardaElIdYElNombreDelCombatienteCaido() {
-        Eliminacion e = new Eliminacion(4, "Kael");
+        Eliminacion e = new Eliminacion(new Combatiente());
 
         assertEquals(4, e.getIdCombatiente());
         assertEquals("Kael", e.getNombre());

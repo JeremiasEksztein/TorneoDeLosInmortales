@@ -17,7 +17,7 @@ public abstract class Tecnica {
 
     // Gasta energía (con el costo calculado por el ejecutor), registra el uso y aplica el efecto.
     public void ejecutar(Combatiente ejecutor, Combatiente rival) {
-        ejecutor.gastarEnergia(ejecutor.calcularCostoEnergia(this));
+        ejecutor.gastarEnergia(costo);
         ejecutor.registrarUso(this);
         aplicarEfecto(ejecutor, rival);
     }

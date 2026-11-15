@@ -1,23 +1,23 @@
 package combatientes;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
-import combate.CriterioAccion;
 import combate.Pareja;
 import equipamiento.Equipamiento;
 import excepciones.EquipamientoInvalidoException;
+import eventos.Acontecimiento;
+import eventos.AccionRealizada;
 import tecnicas.Accion;
 import tecnicas.Tecnica;
 
 public abstract class Combatiente implements Comparable<Combatiente> {
 	protected final int id;
-	private CriterioAccion criterio;
-	private String nombre;
+	 // private CriterioAccion criterio; La comento porque no se usa en ningun lado
+	private final String nombre;
 	
 	//private static final int VIDA_BASE;
 	//ctes para condiciones 
@@ -25,8 +25,8 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 	private static final int MAX_EQUIPAMIENTO = 3;
 	// 
 	
-	private int vidaBase;//los agrego para el metodo de recalcular los valores
-	private int energiaBase;
+	private final int vidaBase;//los agrego para el metodo de recalcular los valores
+	private final int energiaBase;
 	
 	private int vidaActual;
 	private int vidaMaxima;
@@ -53,7 +53,7 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		this.vidaBase = vidaMaxima;
 		this.energiaBase = energiaMaxima;
 		equipamiento = new ArrayList<>();
-		tecnicasDisponibles = new HashMap<>();
+		tecnicasDisponibles = new LinkedHashMap<>();
 		usadasEnCombate = new HashSet<>();
 		//tecnicas = new ArrayList<>();
 		
@@ -80,19 +80,19 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		this.tecnicasDisponibles.put(t, USOS_POR_TECNICA);
 	}
 	
-	public void recibirDaño(int dañoBase) {
-		int dañoFinal = calcularDañoRecibido(dañoBase);
-		if(this.tieneDefensaActiva()) {//es es una manera, acá es como si fuera un consumible que,
-			if(this.reduccionDefensiva < dañoFinal) {//si el daño lo rompe ya no lo tiene mas
-				dañoFinal -= this.reduccionDefensiva;
+	public void recibirDanio(int danioBase) {
+		int danioFinal = calcularDanioRecibido(danioBase);
+		if(this.tieneDefensaActiva()) {//es una manera, acá es como si fuera un consumible que,
+			if(this.reduccionDefensiva < danioFinal) {//si el daño lo rompe ya no lo tiene más
+				danioFinal -= this.reduccionDefensiva;
 				this.reduccionDefensiva = 0;
 			}
 			else {
-				this.reduccionDefensiva-=dañoFinal;
+				this.reduccionDefensiva-=danioFinal;
 				return;
 			}
 		}
-		this.vidaActual -= dañoFinal;
+		this.vidaActual -= danioFinal;
 		if(this.vidaActual < 0) {
 			this.vidaActual = 0;
 		}
@@ -113,7 +113,7 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		}
 		int cantFinal = calcularCostoEnergia(cantidad);
 		
-		if(cantFinal > this.energiaActual) {//esto no puede pasar pero no sé si lanzar una exception es un poco mucho
+		if(cantFinal > this.energiaActual) {//esto no puede pasar, pero no sé si lanzar una exception es un poco mucho
 			throw new IllegalStateException("No se puede gastar más energia");
 		}
 		this.energiaActual -= cantFinal;
@@ -146,13 +146,12 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 			throw new IllegalArgumentException("El combatiente no tiene esa tecnica aprendida");
 		}
 		this.usadasEnCombate.add(t);
-		int uso = this.tecnicasDisponibles.get(t);
-		this.tecnicasDisponibles.put(t, uso - 1);
+		this.tecnicasDisponibles.put(t, (this.tecnicasDisponibles.get(t)-1));
 	}
 	
 	public int usosRestantes(Tecnica t) {
 		if(!this.tecnicasDisponibles.containsKey(t)) {
-			throw new IllegalStateException("El combatiente no tiene esa tecnica!");//cambiarlo por una nueva excepcion ?
+			throw new IllegalStateException("El combatiente no tiene esa tecnica!");//cambiarlo por una nueva excepcion?
 		}
 		return this.tecnicasDisponibles.get(t);
 	}
@@ -176,6 +175,7 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		this.vidaActual = this.vidaMaxima;
 		this.energiaActual = this.energiaMaxima;
 		this.usadasEnCombate.clear();
+		this.reduccionDefensiva = 0;
 	}
 	public boolean estaEnPie() {
 		return this.vidaActual > 0;
@@ -189,9 +189,6 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 	public List<Equipamiento> getEquipamiento(){//
 		return this.equipamiento;
 	}
-	public void setCriterio(CriterioAccion c) {
-		this.criterio = c;
-	}
 	public int getVidaMaxima() {
 		return this.vidaMaxima;
 	}
@@ -199,7 +196,44 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		return this.energiaMaxima;
 	}
 	public Accion elegirAccion(Pareja p) {
-		//return this.criterio.haceralgo(); //falta definirlo
+		return null;
+	}
+
+	public void procesarEfectosTemporales() {
+		// Reservado para efectos temporales; actualmente no hay ninguno persistente.
+	}
+
+	/**
+	 * Ejecuta una técnica disponible y compatible con el estado del turno.
+	 * Si no hay una, realiza el ataque básico contra el primer rival vivo.
+	 */
+
+	public Acontecimiento ejecutarTurno(Pareja pareja, List<Combatiente> rivales) {
+		if (!estaEnPie() || rivales == null || rivales.isEmpty()) {
+			throw new IllegalStateException("No se puede ejecutar un turno sin un rival vivo.");
+		}
+
+		Combatiente objetivo = rivales.getFirst(); // ataca al primer rival
+		for (Map.Entry<Tecnica, Integer> entrada : tecnicasDisponibles.entrySet()) {
+			Tecnica tecnica = entrada.getKey();
+			if (entrada.getValue() <= 0 || !puedeEjecutar(tecnica)
+					|| (pareja != null && !pareja.puedeUsar(this, tecnica))) {
+				continue;
+			}
+			tecnica.ejecutar(this, tecnica.getTipo() == tecnicas.TipoTecnica.OFENSIVA ? objetivo : this);
+			int idObjetivo = tecnica.getTipo() == tecnicas.TipoTecnica.OFENSIVA
+					? objetivo.getId() : id;
+			return new AccionRealizada(id, tecnica.getNombre(), idObjetivo, 0);
+		}
+
+		int danio = calcularDanioProvocado(10);
+		objetivo.recibirDanio(danio);
+		return new AccionRealizada(id, "Ataque básico", objetivo.getId(), danio);
+	}
+
+	@Override
+	public int compareTo(Combatiente otro) {
+		return Integer.compare(id, otro.id);
 	}
 	public void  activarDefensa(int reduccion) {
 		this.reduccionDefensiva = reduccion;
@@ -223,8 +257,8 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		}
 	}
 	
-	public abstract int calcularDañoProvocado(int cantidad);
-	public abstract int calcularDañoRecibido(int n);
+	public abstract int calcularDanioProvocado(int cantidad);
+	public abstract int calcularDanioRecibido(int n);
 	public abstract int calcularCostoEnergia(int n) ;
 	
 	

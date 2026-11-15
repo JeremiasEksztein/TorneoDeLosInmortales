@@ -18,6 +18,32 @@ public class Combate {
 	private PublicadorAcontecimiento publicador;
 	private int LIMITE_ASALTOS;
 	private int ENERGIA_POR_ASALTO;
+
+	public Combate(Pareja parejaA, Pareja parejaB, int numeroRonda,PublicadorAcontecimiento publicador,
+                   int limiteAsaltos, int energiaPorAsalto) {
+
+		if (parejaA == null || parejaB == null || publicador == null) {
+			throw new IllegalArgumentException("Las parejas y el publicador son obligatorios.");
+		}
+		if (limiteAsaltos <= 0 || energiaPorAsalto < 0) {
+			throw new IllegalArgumentException("Los parámetros del combate no son válidos.");
+		}
+		this.parejaA = parejaA;
+		this.parejaB = parejaB;
+		this.numeroRonda = numeroRonda;
+		this.publicador = publicador;
+		this.LIMITE_ASALTOS = limiteAsaltos;
+		this.ENERGIA_POR_ASALTO = energiaPorAsalto;
+	}
+
+	public Combate(Pareja parejaA, Pareja parejaB, int numeroRonda,
+			PublicadorAcontecimiento publicador) {
+		this(parejaA, parejaB, numeroRonda, publicador, 100, 10); // valores por defecto
+	}
+
+	public Combate(Pareja parejaA, Pareja parejaB) {
+		this(parejaA, parejaB, 1, new PublicadorAcontecimiento());
+	}
 	
 	public ResultadoCombate ejecutar() {
 	    // 1. Preparar combatientes (restaurar vida/energía al máximo y limpiar estados del combate anterior)
@@ -41,8 +67,6 @@ public class Combate {
 
         // 3. Resolución del combate
         Pareja ganadora = determinarGanadora(primera, segunda);
-        Pareja perdedora = (ganadora == primera) ? segunda : primera;
-
         ResultadoCombate resultado = new ResultadoCombate(
             numeroRonda,
             primera.getId(),
@@ -66,7 +90,7 @@ public class Combate {
         jugarTurno(primera, segunda);
 
         // Si en cualquier momento una pareja queda sin integrantes en pie, el combate termina
-        if (!segunda.estaDerrotada()) {
+        if (segunda.estaEnPie()) {
             jugarTurno(segunda, primera);
         }
     }
@@ -87,11 +111,10 @@ public class Combate {
                 continue;
             }
 
-            Combatiente companiero = atacante.getCompanieroDe(combatiente);
             List<Combatiente> rivalesEnPie = defensora.getCombatientesEnPieOrdenados();
 
             // El combatiente decide y ejecuta su acción (técnica o ataque básico)
-            Acontecimiento eventoAccion = combatiente.ejecutarTurno(companiero, rivalesEnPie);
+            Acontecimiento eventoAccion = combatiente.ejecutarTurno(atacante,rivalesEnPie);
             publicador.notificar(eventoAccion);
 
             // Verificar si algún rival quedó fuera de combate (vida == 0) tras la acción
@@ -127,6 +150,7 @@ public class Combate {
 	}
 	
 	private boolean esEmpate() {
-		
+		return parejaA != null && parejaB != null
+				&& parejaA.vidaTotal() == parejaB.vidaTotal();
 	}
 }

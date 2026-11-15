@@ -1,7 +1,5 @@
 package equipamiento;
 
-import combatientes.Combatiente;
-
 public abstract class Equipamiento {
 
     private String nombre;
@@ -58,6 +56,11 @@ public abstract class Equipamiento {
 		Equipamiento e = (Equipamiento) o;
 		return this.nombre.equals(e.nombre);
     }
-    
-}
+    public abstract int getBonusVida();
 
+    public abstract int getBonusEnergia();
+
+    public int getBonoDaño() {
+        return daño;
+    }
+}

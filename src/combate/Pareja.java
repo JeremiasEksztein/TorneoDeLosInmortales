@@ -1,18 +1,26 @@
 package combate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import combatientes.Combatiente;
 import tecnicas.Tecnica;
 
 public class Pareja {
 	private int id;
+	private static int contadorId = 1;
 	private Combatiente combatienteA;
 	private Combatiente combatienteB;
-	
+
+
+
+	public Pareja(Combatiente combatienteA, Combatiente combatienteB) {
+		this.id = this.contadorId;
+		this.combatienteA = combatienteA;
+		this.combatienteB = combatienteB;
+		this.contadorId++;
+	}
 	
 	public int vidaTotal() {
 		return (combatienteA.getVida() + combatienteB.getVida());
@@ -30,10 +38,34 @@ public class Pareja {
 	
 	// le cambie el tipo porque se usa en "Combate" pero antes devolvia un void
 	public List<Combatiente> integrantesEnOrden() {
-		//No se como implementarla xD
-		
-		return new ArrayList<>();
-				
+		List<Combatiente> integrantes = new ArrayList<>(
+				Arrays.asList(combatienteA, combatienteB));
+		integrantes.sort(Comparator.comparingInt(Combatiente::getId));
+		return integrantes;
+	}
+
+	public List<Combatiente> getCombatientesEnPieOrdenados() {
+		List<Combatiente> resultado = new ArrayList<>();
+		for (Combatiente combatiente : integrantesEnOrden()) {
+			if (combatiente.estaEnPie()) {
+				resultado.add(combatiente);
+			}
+		}
+		return resultado;
+	}
+
+	public boolean estaDerrotada() {
+		return !estaEnPie();
+	}
+
+	public Combatiente getCompanieroDe(Combatiente combatiente) {
+		if (combatienteA.equals(combatiente)) {
+			return combatienteB;
+		}
+		if (combatienteB.equals(combatiente)) {
+			return combatienteA;
+		}
+		throw new IllegalArgumentException("El combatiente no pertenece a esta pareja.");
 	}
 	public boolean puedeUsar(Combatiente ejecutor, Tecnica tecnica) {
 
@@ -44,7 +76,7 @@ public class Pareja {
 		if(tecnica==null) {
 			throw new IllegalArgumentException("La técnica no puede ser nula.");
 		}
-        Combatiente companiero = obtenerCompaniero(ejecutor);
+        Combatiente companiero = getCompanieroDe(ejecutor);
 
         // se bloquea si tu compañero uso la misma tecnica
         boolean bloqueadaPorCompaniero = companiero.usoEnEsteCombate(tecnica)
@@ -54,17 +86,9 @@ public class Pareja {
         return !bloqueadaPorCompaniero;
     }
 	
-	private Combatiente obtenerCompaniero(Combatiente ejecutor) {
-        if (ejecutor.equals(combatienteA)) {
-            return combatienteB;
-        }
-        if (ejecutor.equals(combatienteB)) {
-            return combatienteA;
-        }
-        throw new IllegalArgumentException("El combatiente no pertenece a esta pareja.");
-    }
-	
 	public void reiniciarParaCombate() {
+		combatienteA.reiniciarParaCombate();
+		combatienteB.reiniciarParaCombate();
 		
 	}
 	public int getId() {

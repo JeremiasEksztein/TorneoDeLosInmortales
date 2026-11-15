@@ -15,6 +15,6 @@ public class DominioDeLaNada extends Tecnica{
 	
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
 		rival.quitarEnergia(ENERGIA_QUITADA);
-		rival.recibirDaño(DAÑO_BASE);
+		rival.recibirDanio(DAÑO_BASE);
 	}
 }

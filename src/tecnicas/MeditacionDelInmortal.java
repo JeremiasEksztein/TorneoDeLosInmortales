@@ -2,7 +2,7 @@ package tecnicas;
 import combatientes.Combatiente;
 
 public class MeditacionDelInmortal extends Tecnica{
-	private static final int CURACION;//no deberia de ir esto, recuperar vida, te da la vida inicial
+	private static final int CURACION=1;//no deberia de ir esto, recuperar vida, te da la vida inicial
 	
 	public MeditacionDelInmortal() {
 		super("Meditacion del Inmortal", 2, TipoTecnica.RECUPERACION);

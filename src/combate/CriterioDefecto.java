@@ -4,7 +4,7 @@ import tecnicas.Accion;
 
 public class CriterioDefecto {
 	public Accion elegirAccion(Combatiente ejecutor, Pareja pareja) {
-		
+		return null;
 	}
 	public void recuperar() {
 		

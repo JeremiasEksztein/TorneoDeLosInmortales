@@ -5,17 +5,17 @@ import excepciones.TipoDeCombatienteDesconocidoException;
 public class CreadorCombatientes {
 	private int proximoId = 1;
 		
-	public Combatiente crear(String tipoCombatiente, String nombre, Escuela escuela) {
+	public Combatiente crear(TipoCombatiente tipoCombatiente, String nombre, Escuela escuela) {
 		Combatiente nuevoCombatiente = null;
 
 		switch(tipoCombatiente) {
-		case "Cultivador de la Espada":
+		case CULTIVADOR_ESPADA:
 			nuevoCombatiente = new CultivadorDeLaEspada(proximoId, nombre);
 			break;
-		case "Monje del Cuerpo Celestial":
+		case MONJE_CUERPO_CELESTIAL:
 			nuevoCombatiente = new MonjeDelCuerpoCelestial(proximoId, nombre);
 			break;
-		case "Hechicero del Vacio":
+		case HECHICERO_VACIO:
 			nuevoCombatiente = new HechiceroDelVacio(proximoId, nombre);
 			break;
 		

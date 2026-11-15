@@ -10,6 +10,6 @@ public class RugidoDeLaBestiaPrimordial extends Tecnica{
 	}
 
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
-		rival.recibirDaño(DAÑO_BASE);
+		rival.recibirDanio(DAÑO_BASE);
 	}
 }

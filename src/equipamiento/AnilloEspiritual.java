@@ -8,4 +8,9 @@ public class AnilloEspiritual extends Equipamiento{
         super("Anillo Espiritual", TipoEquipamiento.ANILLO, 0, 0, 0, AUMENTO_ENERGIA_MAX);
     }
 
+	@Override
+	public int getBonusVida() { return getVidaMax(); }
+
+	@Override
+	public int getBonusEnergia() { return getEnergiaMax(); }
 }
