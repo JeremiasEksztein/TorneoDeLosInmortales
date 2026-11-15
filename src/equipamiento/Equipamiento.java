@@ -56,11 +56,18 @@ public abstract class Equipamiento {
 		Equipamiento e = (Equipamiento) o;
 		return this.nombre.equals(e.nombre);
     }
-    public abstract int getBonusVida();
-
-    public abstract int getBonusEnergia();
-
+    public  int getBonusVida(){
+        return 0;
+    }
+    public  int getBonoDefensa()
+    {
+        return 0;
+    }
+    public  int getBonusEnergia()
+    {
+        return 0;
+    }
     public int getBonoDaño() {
-        return daño;
+        return 0;
     }
 }

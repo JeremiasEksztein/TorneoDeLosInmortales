@@ -7,19 +7,10 @@ public class MonjeDelCuerpoCelestial extends Combatiente {
     public MonjeDelCuerpoCelestial(int id, String nombre) {
         super(id, nombre, VIDA_INICIAL, ENERGIA_INICIAL);
     }
-
-    @Override
-    public int calcularDanioProvocado(int cantidad) {
-        return cantidad;
-    }
-
+    
     @Override
     public int calcularDanioRecibido(int cantidad) {
         return cantidad;
     }
 
-    @Override
-    public int calcularCostoEnergia(int cantidad) {
-        return cantidad;
-    }
 }

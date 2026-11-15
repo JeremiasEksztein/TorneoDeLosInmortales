@@ -9,8 +9,7 @@ public class AnilloEspiritual extends Equipamiento{
     }
 
 	@Override
-	public int getBonusVida() { return getVidaMax(); }
-
-	@Override
-	public int getBonusEnergia() { return getEnergiaMax(); }
+	public int getBonusEnergia() { 
+		return AUMENTO_ENERGIA_MAX;
+	 }
 }

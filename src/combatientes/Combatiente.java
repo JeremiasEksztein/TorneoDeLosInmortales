@@ -13,6 +13,7 @@ import eventos.Acontecimiento;
 import eventos.AccionRealizada;
 import tecnicas.Accion;
 import tecnicas.Tecnica;
+import equipamiento.TipoEquipamiento;
 
 public abstract class Combatiente implements Comparable<Combatiente> {
 	protected final int id;
@@ -257,9 +258,29 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		}
 	}
 	
-	public abstract int calcularDanioProvocado(int cantidad);
-	public abstract int calcularDanioRecibido(int n);
-	public abstract int calcularCostoEnergia(int n) ;
+	public int calcularDanioProvocado(int cantidad){
+		for(Equipamiento equipo : getEquipamiento()) {
+			if(equipo.getTipo() == TipoEquipamiento.ARMA) {
+			 cantidad+=equipo.getBonoDaño();
+			}
+		}
+		return cantidad;
+	}
+	
+	
+	public  int calcularDanioRecibido(int n){
+
+		for(Equipamiento equipo : getEquipamiento()) {
+			if(equipo.getTipo() == TipoEquipamiento.ARMADURA) {
+				n-=equipo.getBonoDefensa();
+			}
+		}
+
+		return n;
+	}
+	public int calcularCostoEnergia(int n){
+		return n;
+	}
 	
 	
 	

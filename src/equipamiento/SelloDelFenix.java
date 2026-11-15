@@ -8,8 +8,8 @@ public class SelloDelFenix extends Equipamiento{
 	}
 
 	@Override
-	public int getBonusVida() { return getVidaMax(); }
-
-	@Override
-	public int getBonusEnergia() { return getEnergiaMax(); }
+	public int getBonusVida() { 
+	
+		return AUMENTO_VIDA_MAX;
+	}
 }
