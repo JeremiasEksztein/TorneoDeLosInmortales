@@ -1,15 +1,14 @@
 package equipamiento;
 
 public class ArmaduraDorada extends Equipamiento{
-	private static final int  REDUCCION_DAÑO_RECIBIDO=10;
+	private static final double  REDUCCION_DAÑO_RECIBIDO=0.5;
 	
 	public ArmaduraDorada() {
-        super("Armadura Dorada", TipoEquipamiento.ARMADURA, 0,REDUCCION_DAÑO_RECIBIDO, 0, 0);
+        super("Armadura Dorada", TipoEquipamiento.ARMADURA);
 	}
 
 	
-	@Override
-	public int getBonoDefensa() {
-		return REDUCCION_DAÑO_RECIBIDO;
+	public int calcularReduccionDanioRecibidoEquipamiento(int cantidad){
+		return  ((int)(cantidad * REDUCCION_DAÑO_RECIBIDO)- cantidad);
 	}
 }

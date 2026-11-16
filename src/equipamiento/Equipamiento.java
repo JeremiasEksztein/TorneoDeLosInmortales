@@ -9,41 +9,26 @@ public abstract class Equipamiento {
     private int vidaMaxima;
     private int energiaMaxima;
 
-    protected Equipamiento(String nombre, TipoEquipamiento tipo, int daño,
-                           int dañoRecibido, int vidaMaxima,
-                           int energiaMaxima) {
+    protected Equipamiento(String nombre, TipoEquipamiento tipo) {
         this.nombre = nombre;
         this.tipo = tipo;
-        this.daño = daño;
-        this.dañoRecibido = dañoRecibido;
-        this.vidaMaxima = vidaMaxima;
-        
-        this.energiaMaxima = energiaMaxima;
+   
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public int getDaño() {
-        return daño;
-    }
-
-    public int getDañoRecibido() {
-        return dañoRecibido;
-    }
-
-    public int getVidaMax() {
-        return vidaMaxima;
-    }
-
-    public int getEnergiaMax() {
-        return energiaMaxima;
-    }
 
     public TipoEquipamiento getTipo() {
         return tipo;
     }
+    
+    
+    public int calcularDanioBonificado(int cantidad) {return cantidad;}
+    public int calcularEnergiaBonificada(int cantidad){return cantidad;}
+    public int calcularVidaMaximaBonificada(int cantidad){return cantidad;}
+    public int calcularDanioRecibidoBonificado(int cantidad){return cantidad;}
     
     @Override
     public boolean equals(Object o) {
@@ -56,18 +41,7 @@ public abstract class Equipamiento {
 		Equipamiento e = (Equipamiento) o;
 		return this.nombre.equals(e.nombre);
     }
-    public  int getBonusVida(){
-        return 0;
-    }
-    public  int getBonoDefensa()
-    {
-        return 0;
-    }
-    public  int getBonusEnergia()
-    {
-        return 0;
-    }
-    public int getBonoDaño() {
-        return 0;
-    }
+    
+   
+   
 }

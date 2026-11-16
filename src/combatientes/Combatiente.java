@@ -247,8 +247,8 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		this.vidaMaxima = this.vidaBase;
 		this.energiaMaxima = this.energiaBase;
 		for(Equipamiento e : this.equipamiento) {
-			this.vidaMaxima += e.getBonusVida();//definir abstracto en equipamiento y sobreescribir dependiendo del item
-			this.energiaMaxima += e.getBonusEnergia();//son BONUS +10, +20, etc
+			this.vidaMaxima = e.calcularVidaMaximaBonificada(this.vidaMaxima);
+			this.energiaMaxima = e.calcularEnergiaBonificada(this.energiaMaxima);
 		}
 		if(this.vidaActual > this.vidaMaxima) {
 			this.vidaActual = this.vidaMaxima;
@@ -261,18 +261,18 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 	public int calcularDanioProvocado(int cantidad){
 		for(Equipamiento equipo : getEquipamiento()) {
 			if(equipo.getTipo() == TipoEquipamiento.ARMA) {
-			 cantidad+=equipo.getBonoDaño();
+			 cantidad=equipo.calcularDanioBonificado(cantidad);
 			}
 		}
 		return cantidad;
 	}
 	
 	
-	public  int calcularDanioRecibido(int n){
+	public int calcularDanioRecibido(int n){
 
 		for(Equipamiento equipo : getEquipamiento()) {
 			if(equipo.getTipo() == TipoEquipamiento.ARMADURA) {
-				n-=equipo.getBonoDefensa();
+				n=equipo.calcularDanioRecibidoBonificado(n);
 			}
 		}
 
@@ -281,8 +281,6 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 	public int calcularCostoEnergia(int n){
 		return n;
 	}
-	
-	
 	
 	
 	public String getNombre() {

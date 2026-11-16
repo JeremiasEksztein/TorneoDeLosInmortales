@@ -1,15 +1,14 @@
 package equipamiento;
 
 public class SelloDelFenix extends Equipamiento{
-	private static final int  AUMENTO_VIDA_MAX=30;	
+	private static final double  AUMENTO_VIDA_MAX=0.4;	
 	
 	public SelloDelFenix() {
-        super("Sello Del Fenix", TipoEquipamiento.SELLO, 0, 0, AUMENTO_VIDA_MAX, 0);
+        super("Sello Del Fenix", TipoEquipamiento.SELLO);
 	}
 
-	@Override
-	public int getBonusVida() { 
 	
-		return AUMENTO_VIDA_MAX;
+	public int calcularDanioRecibidoBonificado(int cantidad){
+		return  ((int)(cantidad * AUMENTO_VIDA_MAX)+ cantidad);
 	}
 }
