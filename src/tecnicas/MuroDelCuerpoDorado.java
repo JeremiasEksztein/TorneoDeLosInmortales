@@ -4,7 +4,7 @@ import combatientes.Combatiente;
 import eventos.AccionRealizada;
 
 public class MuroDelCuerpoDorado extends Tecnica {
-	private static final int REDUCCION = 20;
+	private static final int REDUCCION = 5;
 	
 	public MuroDelCuerpoDorado() {
 		super("Muro del Cuerpo Dorado", 20, TipoTecnica.DEFENSIVA);

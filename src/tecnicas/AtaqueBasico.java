@@ -4,7 +4,7 @@ import combatientes.Combatiente;
 import eventos.AccionRealizada;
 
 public class AtaqueBasico implements Accion {
-	private static final int DANIO_BASE = 10;
+	private static final int DANIO_BASE = 12;
 
 	@Override
 	public AccionRealizada ejecutar(Combatiente ejecutor, Combatiente rival) {

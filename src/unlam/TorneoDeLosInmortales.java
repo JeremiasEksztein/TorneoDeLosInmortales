@@ -16,13 +16,14 @@ import tecnicas.CorteDeLosMilAmaneceres;
 import tecnicas.DominioDeLaNada;
 import tecnicas.MeditacionDelInmortal;
 import tecnicas.MuroDelCuerpoDorado;
+import tecnicas.NieblaVenenosa;
 import tecnicas.RugidoDeLaBestiaPrimordial;
 import torneo.Torneo;
 
 public class TorneoDeLosInmortales {
 
 	public static void main(String[] args) {
-		// 1. Configuración de Escuelas
+		// 1. Configuración de Escuelas (objetos configurables sin escribir código nuevo)
 		Escuela escuelaDeLaEspada = new Escuela(
 				"Escuela de la Espada Celestial",
 				List.of(new CorteDeLosMilAmaneceres(), new RugidoDeLaBestiaPrimordial()),
@@ -30,7 +31,7 @@ public class TorneoDeLosInmortales {
 
 		Escuela palacioDelVacio = new Escuela(
 				"Palacio del Vacío",
-				List.of(new DominioDeLaNada(), new MeditacionDelInmortal()),
+				List.of(new DominioDeLaNada(), new NieblaVenenosa(), new MeditacionDelInmortal()),
 				List.of(new AnilloEspiritual()));
 
 		Escuela monasterioCuerpoDorado = new Escuela(

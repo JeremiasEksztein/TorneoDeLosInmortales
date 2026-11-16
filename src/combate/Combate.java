@@ -2,7 +2,9 @@ package combate;
 import java.util.List;
 
 import combatientes.Combatiente;
+import eventos.AccionRealizada;
 import eventos.Acontecimiento;
+import eventos.EfectoAplicado;
 import eventos.Eliminacion;
 import eventos.InicioDeCombate;
 import eventos.PublicadorAcontecimiento;
@@ -101,29 +103,36 @@ public class Combate {
         List<Combatiente> activos = atacante.integrantesEnOrden();
 
         for (Combatiente combatiente : activos) {
-        	if (defensora.estaDerrotada()) break;
-            if (!combatiente.estaEnPie()) continue;
-            
+        	if (defensora.estaDerrotada()) {
+				break;
+			}
+			if (!combatiente.estaEnPie()) {
+				continue;
+			}
 
-            // Si implementaste el bonus de efectos temporales (veneno/regeneración)
-            combatiente.procesarEfectosTemporales();
-            if (!combatiente.estaEnPie()) {
-                publicador.notificar(new Eliminacion(combatiente.getId(), combatiente.getNombre()));
-                continue;
-            }
+			// Procesar efectos temporales al inicio del turno del combatiente
+			int danioEfectos = combatiente.procesarEfectosTemporales();
+			if (danioEfectos > 0) {
+				publicador.notificar(new EfectoAplicado(
+						combatiente.getId(), "Veneno", danioEfectos));
+			}
+			if (!combatiente.estaEnPie()) {
+				publicador.notificar(new Eliminacion(combatiente.getId(), combatiente.getNombre()));
+				continue;
+			}
 
-            List<Combatiente> rivalesEnPie = defensora.getCombatientesEnPieOrdenados();
+			List<Combatiente> rivalesEnPie = defensora.getCombatientesEnPieOrdenados();
 
-            // El combatiente decide y ejecuta su acción (técnica o ataque básico)
-            Acontecimiento eventoAccion = combatiente.ejecutarTurno(atacante,rivalesEnPie);
-            publicador.notificar(eventoAccion);
+			// El combatiente decide y ejecuta su acción (técnica o ataque básico)
+			Acontecimiento eventoAccion = combatiente.ejecutarTurno(atacante, rivalesEnPie);
+			publicador.notificar(eventoAccion);
 
-            // Verificar si algún rival quedó fuera de combate (vida == 0) tras la acción
-            for (Combatiente rival : rivalesEnPie) {
-                if (!rival.estaEnPie()) {
-                    publicador.notificar(new Eliminacion(rival.getId(), rival.getNombre()));
-                }
-            }
+			// Verificar si algún rival quedó fuera de combate (vida == 0) tras la acción
+			for (Combatiente rival : rivalesEnPie) {
+				if (!rival.estaEnPie()) {
+					publicador.notificar(new Eliminacion(rival.getId(), rival.getNombre()));
+				}
+			}
         }
     }
 
