@@ -17,14 +17,20 @@ public abstract class EfectoTemporal {
 		this.turnosRestantes = duracionTurnos;
 	}
 
-	public final void procesarTurno(Combatiente afectado) {
+	public final String procesarTurno(Combatiente afectado) {
 		if (estaActivo() && afectado != null && afectado.estaEnPie()) {
-			aplicar(afectado);
+			String detalle = aplicarYDescribir(afectado);
 			this.turnosRestantes--;
+			return detalle;
 		}
+		return null;
 	}
 
-	protected abstract void aplicar(Combatiente afectado);
+	protected abstract String aplicarYDescribir(Combatiente afectado);
+
+	public int modificarDanioProvocado(int danio) {
+		return danio;
+	}
 
 	public boolean estaActivo() {
 		return this.turnosRestantes > 0;

@@ -12,8 +12,10 @@ import equipamiento.EspadaCelestial;
 import equipamiento.SelloDelFenix;
 import eventos.CronistaDeLaSecta;
 import eventos.HeraldoImperial;
+import tecnicas.CorrupcionDelCaos;
 import tecnicas.CorteDeLosMilAmaneceres;
 import tecnicas.DominioDeLaNada;
+import tecnicas.LlamaPurificadora;
 import tecnicas.MeditacionDelInmortal;
 import tecnicas.MuroDelCuerpoDorado;
 import tecnicas.NieblaVenenosa;
@@ -23,15 +25,15 @@ import torneo.Torneo;
 public class TorneoDeLosInmortales {
 
 	public static void main(String[] args) {
-		// 1. Configuración de Escuelas (objetos configurables sin escribir código nuevo)
+		// 1. Configuración de Escuelas		
 		Escuela escuelaDeLaEspada = new Escuela(
 				"Escuela de la Espada Celestial",
-				List.of(new CorteDeLosMilAmaneceres(), new RugidoDeLaBestiaPrimordial()),
+				List.of(new CorteDeLosMilAmaneceres(), new LlamaPurificadora(), new RugidoDeLaBestiaPrimordial()),
 				List.of(new EspadaCelestial()));
 
 		Escuela palacioDelVacio = new Escuela(
 				"Palacio del Vacío",
-				List.of(new DominioDeLaNada(), new NieblaVenenosa(), new MeditacionDelInmortal()),
+				List.of(new DominioDeLaNada(), new CorrupcionDelCaos(), new NieblaVenenosa(), new MeditacionDelInmortal()),
 				List.of(new AnilloEspiritual()));
 
 		Escuela monasterioCuerpoDorado = new Escuela(

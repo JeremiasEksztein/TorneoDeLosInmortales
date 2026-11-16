@@ -14,6 +14,7 @@ import efectos.EfectoTemporal;
 import equipamiento.Equipamiento;
 import excepciones.EquipamientoInvalidoException;
 import eventos.Acontecimiento;
+import eventos.EfectoAplicado;
 import eventos.AccionRealizada;
 import tecnicas.Tecnica;
 import tecnicas.TipoTecnica;
@@ -264,13 +265,16 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		return new ArrayList<>(this.efectosActivos);
 	}
 	
-	public int procesarEfectosTemporales() {
-		int vidaAntes = this.vidaActual;
+	public List<EfectoAplicado> procesarEfectosTemporales() {
+		List<EfectoAplicado> eventos = new ArrayList<>();
 		for (EfectoTemporal efecto : this.efectosActivos) {
-			efecto.procesarTurno(this);
+			String mensaje = efecto.procesarTurno(this);
+			if (mensaje != null) {
+				eventos.add(new EfectoAplicado(mensaje));
+			}
 		}
 		this.efectosActivos.removeIf(efecto -> !efecto.estaActivo());
-		return vidaAntes - this.vidaActual;
+		return eventos;
 	}
 
 	/**
@@ -380,14 +384,15 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		}
 	}
 	
-	public int calcularDanioProvocado(int cantidad){
-		for(Equipamiento equipo : getEquipamiento()) {
-			if(equipo.getTipo() == TipoEquipamiento.ARMA) {
-			 cantidad=equipo.calcularDanioBonificado(cantidad);
-
-			}
+	public int calcularDanioProvocado(int danioBase) {
+		if (danioBase < 0) {
+			throw new IllegalArgumentException("El daño base no puede ser negativo.");
 		}
-		return cantidad;
+		int danio = danioBase;
+		for (EfectoTemporal efecto : this.efectosActivos) {
+			danio = efecto.modificarDanioProvocado(danio);
+		}
+		return Math.max(0, danio);
 	}
 	
 	

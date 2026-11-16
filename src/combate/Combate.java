@@ -111,16 +111,14 @@ public class Combate {
 			}
 
 			// Procesar efectos temporales al inicio del turno del combatiente
-			int danioEfectos = combatiente.procesarEfectosTemporales();
-			if (danioEfectos > 0) {
-				publicador.notificar(new EfectoAplicado(
-						combatiente.getId(), "Veneno", danioEfectos));
+			for (EfectoAplicado eventoEfecto : combatiente.procesarEfectosTemporales()) {
+				publicador.notificar(eventoEfecto);
 			}
 			if (!combatiente.estaEnPie()) {
 				publicador.notificar(new Eliminacion(combatiente.getId(), combatiente.getNombre()));
 				continue;
 			}
-
+			
 			List<Combatiente> rivalesEnPie = defensora.getCombatientesEnPieOrdenados();
 
 			// El combatiente decide y ejecuta su acción (técnica o ataque básico)
