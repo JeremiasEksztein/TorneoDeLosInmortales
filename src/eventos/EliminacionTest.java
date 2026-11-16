@@ -1,14 +1,14 @@
 package eventos;
-
+import combatientes.CreadorCombatientes;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import combatientes.CreadorCombatiente;
+
 
 
 class EliminacionTest {
-    private static final int contadorId=1;
-    CreadorCombatiente creadorCombatiente = new CreadorCombatiente();
+    private static int contadorId=1;
+    CreadorCombatientes creadorCombatiente = new CreadorCombatientes();
     @BeforeEach
     void setUp() {
 
@@ -20,7 +20,8 @@ class EliminacionTest {
     }
     @Test
     void guardaElIdYElNombreDelCombatienteCaido() {
-        Eliminacion e = new Eliminacion();
+    	
+        Eliminacion e = new Eliminacion(4, "Kael");
 
         assertEquals(4, e.getIdCombatiente());
         assertEquals("Kael", e.getNombre());

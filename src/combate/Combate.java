@@ -100,14 +100,14 @@ public class Combate {
         List<Combatiente> activos = atacante.integrantesEnOrden();
 
         for (Combatiente combatiente : activos) {
-            if (!combatiente.estaEnPie() || defensora.estaDerrotada()) {
-                break;
-            }
+        	if (defensora.estaDerrotada()) break;
+            if (!combatiente.estaEnPie()) continue;
+            
 
             // Si implementaste el bonus de efectos temporales (veneno/regeneración)
             combatiente.procesarEfectosTemporales();
             if (!combatiente.estaEnPie()) {
-                publicador.notificar(new Eliminacion(combatiente));
+                publicador.notificar(new Eliminacion(combatiente.getId(), combatiente.getNombre()));
                 continue;
             }
 
@@ -120,7 +120,7 @@ public class Combate {
             // Verificar si algún rival quedó fuera de combate (vida == 0) tras la acción
             for (Combatiente rival : rivalesEnPie) {
                 if (!rival.estaEnPie()) {
-                    publicador.notificar(new Eliminacion(rival));
+                    publicador.notificar(new Eliminacion(rival.getId(), rival.getNombre()));
                 }
             }
         }
