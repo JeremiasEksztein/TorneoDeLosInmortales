@@ -27,7 +27,7 @@ public class PublicadorAcontecimiento {
     public void notificar(Acontecimiento acontecimiento) {
         
     	if(acontecimiento == null) {
-    		throw new IllegalArgumentException("El acontecimiento no puede ser nulo o estar vacio");
+    		throw new IllegalArgumentException("El acontecimiento no puede ser nulo");
     	}
         
         for (Interesado interesado : this.interesados) {

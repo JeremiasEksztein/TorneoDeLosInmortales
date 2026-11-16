@@ -5,7 +5,7 @@ import excepciones.TipoDeCombatienteDesconocidoException;
 public class CreadorCombatientes {
 	private int proximoId = 1;
 		
-	public Combatiente crear(string tipoCombatiente, String nombre, Escuela escuela) {
+	public Combatiente crear(String tipoCombatiente, String nombre, Escuela escuela) {
 		Combatiente nuevoCombatiente = null;
 
 		switch(tipoCombatiente) {

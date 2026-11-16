@@ -219,7 +219,7 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		return this.energiaMaxima;
 	}
 
-	public Accion elegirAccion(Pareja p) {
+	public AccionRealizada elegirAccion(Pareja p) {
 		return null;
 	}
 
