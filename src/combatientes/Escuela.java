@@ -31,7 +31,8 @@ public class Escuela {
 		for (Equipamiento e : equipamientoInicial) {
 			c.equipar(e);
 		}
-		c.reiniciarParaCombate();
+		// no llamar a reiniciarParaCombate() aca: equipar sube el máximo pero no el valor actual.
+		// al iniciar el primer combate, Combate.ejecutar() restaurará vida y energía al máximo.
 	}
 
 	public String getNombre() {

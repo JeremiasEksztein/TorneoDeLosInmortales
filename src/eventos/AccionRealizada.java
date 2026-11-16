@@ -9,8 +9,9 @@ public class AccionRealizada extends Acontecimiento {
 
     public AccionRealizada(int idEjecutor, String nombreAccion,
                            int idObjetivo, int puntos) {
-        super("El combatiente " + idEjecutor + " usa " + nombreAccion
-              + " sobre el combatiente " + idObjetivo + " (" + puntos + " puntos)");
+    	super(idEjecutor == idObjetivo
+    	        ? "El combatiente " + idEjecutor + " usa " + nombreAccion + " sobre sí mismo (" + puntos + " puntos)"
+    	        : "El combatiente " + idEjecutor + " usa " + nombreAccion + " sobre el combatiente " + idObjetivo + " (" + puntos + " puntos)");
         this.idEjecutor = idEjecutor;
         this.nombreAccion = nombreAccion;
         this.idObjetivo = idObjetivo;

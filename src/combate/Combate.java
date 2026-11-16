@@ -2,13 +2,13 @@ package combate;
 import java.util.List;
 
 import combatientes.Combatiente;
+import eventos.AccionRealizada;
 import eventos.Acontecimiento;
+import eventos.EfectoAplicado;
 import eventos.Eliminacion;
 import eventos.InicioDeCombate;
-import eventos.Interesado;
 import eventos.PublicadorAcontecimiento;
 import eventos.ResultadoCombate;
-import tecnicas.Accion;
 
 public class Combate {
 	private Pareja parejaA;
@@ -24,6 +24,9 @@ public class Combate {
 
 		if (parejaA == null || parejaB == null || publicador == null) {
 			throw new IllegalArgumentException("Las parejas y el publicador son obligatorios.");
+		}
+		if (parejaA.equals(parejaB)) {
+			throw new IllegalArgumentException("Una pareja no puede combatir contra sí misma.");
 		}
 		if (limiteAsaltos <= 0 || energiaPorAsalto < 0) {
 			throw new IllegalArgumentException("Los parámetros del combate no son válidos.");
@@ -100,29 +103,34 @@ public class Combate {
         List<Combatiente> activos = atacante.integrantesEnOrden();
 
         for (Combatiente combatiente : activos) {
-        	if (defensora.estaDerrotada()) break;
-            if (!combatiente.estaEnPie()) continue;
-            
+        	if (defensora.estaDerrotada()) {
+				break;
+			}
+			if (!combatiente.estaEnPie()) {
+				continue;
+			}
 
-            // Si implementaste el bonus de efectos temporales (veneno/regeneración)
-            combatiente.procesarEfectosTemporales();
-            if (!combatiente.estaEnPie()) {
-                publicador.notificar(new Eliminacion(combatiente.getId(), combatiente.getNombre()));
-                continue;
-            }
+			// Procesar efectos temporales al inicio del turno del combatiente
+			for (EfectoAplicado eventoEfecto : combatiente.procesarEfectosTemporales()) {
+				publicador.notificar(eventoEfecto);
+			}
+			if (!combatiente.estaEnPie()) {
+				publicador.notificar(new Eliminacion(combatiente.getId(), combatiente.getNombre()));
+				continue;
+			}
+			
+			List<Combatiente> rivalesEnPie = defensora.getCombatientesEnPieOrdenados();
 
-            List<Combatiente> rivalesEnPie = defensora.getCombatientesEnPieOrdenados();
+			// El combatiente decide y ejecuta su acción (técnica o ataque básico)
+			Acontecimiento eventoAccion = combatiente.ejecutarTurno(atacante, rivalesEnPie);
+			publicador.notificar(eventoAccion);
 
-            // El combatiente decide y ejecuta su acción (técnica o ataque básico)
-            Acontecimiento eventoAccion = combatiente.ejecutarTurno(atacante,rivalesEnPie);
-            publicador.notificar(eventoAccion);
-
-            // Verificar si algún rival quedó fuera de combate (vida == 0) tras la acción
-            for (Combatiente rival : rivalesEnPie) {
-                if (!rival.estaEnPie()) {
-                    publicador.notificar(new Eliminacion(rival.getId(), rival.getNombre()));
-                }
-            }
+			// Verificar si algún rival quedó fuera de combate (vida == 0) tras la acción
+			for (Combatiente rival : rivalesEnPie) {
+				if (!rival.estaEnPie()) {
+					publicador.notificar(new Eliminacion(rival.getId(), rival.getNombre()));
+				}
+			}
         }
     }
 
@@ -145,12 +153,4 @@ public class Combate {
         // En empate de vida total, gana la de menor identificador ('primera' ya es la de menor ID)
         return primera;
     }
-	private void elegirObjetivo(Pareja pareja) {
-		
-	}
-	
-	private boolean esEmpate() {
-		return parejaA != null && parejaB != null
-				&& parejaA.vidaTotal() == parejaB.vidaTotal();
-	}
 }

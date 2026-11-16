@@ -8,38 +8,50 @@ import combatientes.Combatiente;
 import tecnicas.Tecnica;
 
 public class Pareja {
-	private int id;
+	private final int id;
 	private static int contadorId = 1;
-	private Combatiente combatienteA;
-	private Combatiente combatienteB;
+	private final Combatiente combatienteA;
+	private final Combatiente combatienteB;
 
 
-
-	public Pareja(Combatiente combatienteA, Combatiente combatienteB) {
-		this.id = this.contadorId;
+	public Pareja(int id, Combatiente combatienteA, Combatiente combatienteB) {
+		if (id <= 0) {
+			throw new IllegalArgumentException("El identificador de la pareja debe ser positivo.");
+		}
+		if (combatienteA == null || combatienteB == null) {
+			throw new IllegalArgumentException("Los combatientes de la pareja no pueden ser nulos.");
+		}
+		if (combatienteA.equals(combatienteB)) {
+			throw new IllegalArgumentException("Un mismo combatiente no puede formar pareja consigo mismo.");
+		}
+		this.id = id;
 		this.combatienteA = combatienteA;
 		this.combatienteB = combatienteB;
-		this.contadorId++;
+	}
+	
+	public Pareja(Combatiente combatienteA, Combatiente combatienteB) {
+		this(contadorId++, combatienteA, combatienteB);
+	}
+	
+	public static void reiniciarContadorId() {
+		contadorId = 1;
 	}
 	
 	public int vidaTotal() {
 		return (combatienteA.getVida() + combatienteB.getVida());
-		
-	}
-	public boolean estaEnPie() {
-		
-		if(!combatienteA.estaEnPie()) {
-			if(!combatienteB.estaEnPie())
-				return false;
-		}
-		return true;
-		
 	}
 	
+	public boolean estaEnPie() {
+		return combatienteA.estaEnPie() || combatienteB.estaEnPie();	
+	}
+
+	public boolean estaDerrotada() {
+		return !estaEnPie();
+	}
+
 	// le cambie el tipo porque se usa en "Combate" pero antes devolvia un void
 	public List<Combatiente> integrantesEnOrden() {
-		List<Combatiente> integrantes = new ArrayList<>(
-				Arrays.asList(combatienteA, combatienteB));
+		List<Combatiente> integrantes = new ArrayList<>(Arrays.asList(combatienteA, combatienteB));
 		integrantes.sort(Comparator.comparingInt(Combatiente::getId));
 		return integrantes;
 	}
@@ -54,10 +66,6 @@ public class Pareja {
 		return resultado;
 	}
 
-	public boolean estaDerrotada() {
-		return !estaEnPie();
-	}
-
 	public Combatiente getCompanieroDe(Combatiente combatiente) {
 		if (combatienteA.equals(combatiente)) {
 			return combatienteB;
@@ -67,6 +75,7 @@ public class Pareja {
 		}
 		throw new IllegalArgumentException("El combatiente no pertenece a esta pareja.");
 	}
+	
 	public boolean puedeUsar(Combatiente ejecutor, Tecnica tecnica) {
 
 		if(ejecutor==null) {
@@ -100,15 +109,10 @@ public class Pareja {
 	public Combatiente getCombatienteB() {
 		return this.combatienteB;
 	}
-	public void recuperarEnergiaAsalto(int eNERGIA_POR_ASALTO) {
-		if(combatienteA.estaEnPie())
-		{
-			combatienteA.recuperarEnergia(eNERGIA_POR_ASALTO);
-		}
-		if(combatienteB.estaEnPie())
-		{
-			combatienteB.recuperarEnergia(eNERGIA_POR_ASALTO);
-		}
+	public void recuperarEnergiaAsalto(int energia) {
+		for (Combatiente c : getCombatientesEnPieOrdenados()) {
+			c.recuperarEnergia(energia);
+		}		
 	}
 	@Override 
 	public boolean equals(Object o) {

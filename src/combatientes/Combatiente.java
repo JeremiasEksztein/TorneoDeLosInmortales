@@ -10,9 +10,11 @@ import java.util.Set;
 import combate.CriterioAccion;
 import combate.CriterioDefecto;
 import combate.Pareja;
+import efectos.EfectoTemporal;
 import equipamiento.Equipamiento;
 import excepciones.EquipamientoInvalidoException;
 import eventos.Acontecimiento;
+import eventos.EfectoAplicado;
 import eventos.AccionRealizada;
 import tecnicas.Tecnica;
 import tecnicas.TipoTecnica;
@@ -37,16 +39,25 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 	private int energiaMaxima;
 	
 	private int reduccionDefensiva;
-	
+		
 	private List<Equipamiento> equipamiento;
 	private Map<Tecnica, Integer> tecnicasDisponibles;
 	private Set<Tecnica> usadasEnCombate;
-	//private List<Tecnica> tecnicas; 
+	private final List<EfectoTemporal> efectosActivos = new ArrayList<>();
 
 	/*DOC: La vidaMaxima y energía maxima, llegan por parámetro, en lugar
 	 * de estar estar definidas.
 	 */
 	protected Combatiente(int id, String nombre, int vidaMaxima, int energiaMaxima) {
+		if (id <= 0) {
+			throw new IllegalArgumentException("El identificador del combatiente debe ser positivo.");
+		}
+		if (nombre == null || nombre.isBlank()) {
+			throw new IllegalArgumentException("El nombre del combatiente no puede ser nulo ni vacío.");
+		}
+		if (vidaMaxima <= 0 || energiaMaxima < 0) {
+			throw new IllegalArgumentException("La vida y energía iniciales deben ser válidas.");
+		}
 		this.id = id;
 		this.nombre = nombre;
 		this.vidaActual = vidaMaxima;
@@ -91,8 +102,28 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		}
 		this.tecnicasDisponibles.put(t, USOS_POR_TECNICA);
 	}
-	
+	/*
+	Seccion 2:
+	"Muro del Cuerpo Dorado: reduce el daño que recibe el ejecutor durante el resto del combate."
+	Seccion 6:
+	"Criterio por defecto, en este orden: una técnica de recuperación si le falta vida; una defensiva si no tiene una activa..."
+	*/
 	public void recibirDanio(int danioBase) {
+		if (danioBase < 0) {
+			throw new IllegalArgumentException("El daño base no puede ser negativo.");
+		}
+		int danioFinal = calcularDanioRecibido(danioBase);
+		if (this.tieneDefensaActiva()) {
+			danioFinal = Math.max(0, danioFinal - this.reduccionDefensiva);
+		}
+		this.vidaActual = Math.max(0, this.vidaActual - danioFinal);
+	}
+	
+	/*
+	public void recibirDanio(int danioBase) {
+		if (danioBase < 0) {
+			throw new IllegalArgumentException("El daño base no puede ser negativo.");
+		}
 		int danioFinal = calcularDanioRecibido(danioBase);
 		if(this.tieneDefensaActiva()) {//es una manera, acá es como si fuera un consumible que,
 			if(this.reduccionDefensiva < danioFinal) {//si el daño lo rompe ya no lo tiene más
@@ -109,15 +140,13 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 			this.vidaActual = 0;
 		}
 	}
+	*/
 	
 	public void recuperarVida(int cantidad) {
 		if(cantidad < 0) {
 			throw new IllegalArgumentException("La cantidad de vida no puede ser menor a 0");
 		}
-		this.vidaActual += cantidad;
-		if(this.vidaActual > this.vidaMaxima) {
-			this.vidaActual = this.vidaMaxima;
-		}
+		this.vidaActual = Math.min(this.vidaMaxima, this.vidaActual + cantidad);
 	}
 
 	public void gastarEnergia(int cantidad) {
@@ -129,30 +158,21 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		if(cantFinal > this.energiaActual) {//esto no puede pasar, pero no sé si lanzar una exception es un poco mucho
 			throw new IllegalStateException("No se puede gastar más energia de la disponible");
 		}
-		this.energiaActual -= cantFinal;
-		if(this.energiaActual < 0) {
-			this.energiaActual = 0;
-		}
+		this.energiaActual = Math.max(0, this.energiaActual - cantFinal);
 	}
 	
 	public  void quitarEnergia(int cantidad) {
 		if(cantidad < 0) {
 			throw new IllegalArgumentException("La cantidad de energia no puede ser menor a 0");
 		}
-		this.energiaActual -= cantidad;
-		if(this.energiaActual < 0) {
-			this.energiaActual = 0;
-		}
-		
+		this.energiaActual = Math.max(0, this.energiaActual - cantidad);
 	}
+	
 	public void  recuperarEnergia(int cantidad) {
 		if(cantidad < 0) {
 			throw new IllegalArgumentException("La cantidad de energia no puede ser menor a 0");
 		}
-		this.energiaActual += cantidad;
-		if(this.energiaActual > this.energiaMaxima) {
-			this.energiaActual = this.energiaMaxima;
-		}
+		this.energiaActual = Math.min(this.energiaMaxima, this.energiaActual + cantidad);
 	}
 	
 	public void registrarUso(Tecnica t) {
@@ -165,10 +185,7 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 	}
 	
 	public int usosRestantes(Tecnica t) {
-		if (!this.tecnicasDisponibles.containsKey(t)) {
-			return 0;
-		}
-		return this.tecnicasDisponibles.get(t);
+		return this.tecnicasDisponibles.getOrDefault(t, 0);
 	}
 	
 	public boolean usoEnEsteCombate(Tecnica t) {
@@ -180,10 +197,7 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 			return false;//si no tiene la tecnica no la puede ejecutar, o poner una excepcion diciendo que no tiene la tecnica
 		}
 		int costoFinal = calcularCostoEnergia(t.getCosto());
-		if(costoFinal > this.energiaActual) {
-			return false;
-		}
-		return this.tecnicasDisponibles.get(t) > 0;
+		return costoFinal <= this.energiaActual && this.tecnicasDisponibles.get(t) > 0;
 	}
 
 	public boolean puedeUsarTecnica(Pareja pareja, Tecnica t) {
@@ -195,6 +209,7 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		this.energiaActual = this.energiaMaxima;
 		this.usadasEnCombate.clear();
 		this.reduccionDefensiva = 0;
+		this.efectosActivos.clear();
 	}
 
 	public boolean estaEnPie() {
@@ -231,9 +246,35 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		}
 		return this.criterio.elegirAccion(this, p);
 	}
+	
+	public void aplicarEfectoTemporal(EfectoTemporal efecto) {
+		if (efecto == null) {
+			throw new IllegalArgumentException("El efecto temporal no puede ser nulo.");
+		}
+		this.efectosActivos.add(efecto);
+	}
 
-	public void procesarEfectosTemporales() {
-		// Reservado para efectos temporales (bonus)
+	public void recibirDanioDirecto(int danio) {
+		if (danio < 0) {
+			throw new IllegalArgumentException("El daño directo no puede ser negativo.");
+		}
+		this.vidaActual = Math.max(0, this.vidaActual - danio);
+	}
+	
+	public List<EfectoTemporal> getEfectosActivos() {
+		return new ArrayList<>(this.efectosActivos);
+	}
+	
+	public List<EfectoAplicado> procesarEfectosTemporales() {
+		List<EfectoAplicado> eventos = new ArrayList<>();
+		for (EfectoTemporal efecto : this.efectosActivos) {
+			String mensaje = efecto.procesarTurno(this);
+			if (mensaje != null) {
+				eventos.add(new EfectoAplicado(mensaje));
+			}
+		}
+		this.efectosActivos.removeIf(efecto -> !efecto.estaActivo());
+		return eventos;
 	}
 
 	/**
@@ -243,16 +284,21 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 	 * Rival en pie con menos vida actual; en empate, menor ID.
 	 */
 	public Combatiente elegirObjetivoRival(List<Combatiente> rivales) {
-		Combatiente seleccionado = rivales.getFirst();
+		if (rivales == null || rivales.isEmpty()) {
+			throw new IllegalArgumentException("La lista de rivales no puede ser nula ni vacía.");
+		}
+		Combatiente seleccionado = null;
 		for (Combatiente r : rivales) {
-			if(r.estaEnPie() && r != seleccionado) {
-				
-				if (r.getVida() < seleccionado.getVida()) {
-					seleccionado = r;
-				} else if (r.getVida() == seleccionado.getVida() && r.getId() < seleccionado.getId()) {
+			if (r != null && r.estaEnPie()) {
+				if (seleccionado == null
+						|| r.getVida() < seleccionado.getVida()
+						|| (r.getVida() == seleccionado.getVida() && r.getId() < seleccionado.getId())) {
 					seleccionado = r;
 				}
 			}
+		}
+		if (seleccionado == null) {
+			throw new IllegalStateException("No hay rivales en pie como objetivo.");
 		}
 		return seleccionado;
 	}
@@ -295,39 +341,12 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 	 * Ejecuta el turno del combatiente siguiendo las reglas de la sección 6.
 	 */
 	public Acontecimiento ejecutarTurno(Pareja pareja, List<Combatiente> rivales) {
-		if (!estaEnPie() || rivales == null || rivales.isEmpty()) {
-			throw new IllegalStateException("No se puede ejecutar un turno sin un rival vivo.");
+		if (!estaEnPie()) {
+			throw new IllegalStateException("Un combatiente caído no puede ejecutar un turno.");
 		}
 		Combatiente objetivoRival = elegirObjetivoRival(rivales);
-		if (objetivoRival == null) {
-			throw new IllegalStateException("No hay rivales en pie como objetivo.");
-		}
-
-		Tecnica tecnicaAEjecutar = seleccionarTecnicaPorDefecto(pareja);
-
-		if (tecnicaAEjecutar != null) {
-			if (tecnicaAEjecutar.getTipo() == TipoTecnica.OFENSIVA) {
-				int vidaAntes = objetivoRival.getVida();
-				tecnicaAEjecutar.ejecutar(this, objetivoRival);
-				int puntosDanio = vidaAntes - objetivoRival.getVida();
-				return new AccionRealizada(this.id, tecnicaAEjecutar.getNombre(), objetivoRival.getId(), puntosDanio);
-			} else if (tecnicaAEjecutar.getTipo() == TipoTecnica.RECUPERACION) {
-				int vidaAntes = this.vidaActual;
-				tecnicaAEjecutar.ejecutar(this, this);
-				int puntosCurados = this.vidaActual - vidaAntes;
-				return new AccionRealizada(this.id, tecnicaAEjecutar.getNombre(), this.id, puntosCurados);
-			} else { // DEFENSIVA
-				tecnicaAEjecutar.ejecutar(this, this);
-				return new AccionRealizada(this.id, tecnicaAEjecutar.getNombre(), this.id, this.reduccionDefensiva);
-			}
-		}
-
-		// Ataque básico
-		int vidaAntes = objetivoRival.getVida();
-		int danio = calcularDanioProvocado(DANIO_BASE_ATAQUE_BASICO);
-		objetivoRival.recibirDanio(danio);
-		int danioEfectivo = vidaAntes - objetivoRival.getVida();
-		return new AccionRealizada(this.id, "Ataque básico", objetivoRival.getId(), danioEfectivo);
+		Accion accionElegida = elegirAccion(pareja);
+		return accionElegida.ejecutar(this, objetivoRival);
 	}
 
 	public void setCriterio(CriterioAccion criterio) {
@@ -337,12 +356,10 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		this.criterio = criterio;
 	}
 
-	@Override
-	public int compareTo(Combatiente otro) {
-		return Integer.compare(this.id, otro.id);
-	}
-
 	public void activarDefensa(int reduccion) {
+		if (reduccion < 0) {
+			throw new IllegalArgumentException("La reducción defensiva no puede ser negativa.");
+		}
 		this.reduccionDefensiva = Math.max(this.reduccionDefensiva, reduccion);
 	}
 
@@ -367,14 +384,15 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		}
 	}
 	
-	public int calcularDanioProvocado(int cantidad){
-		for(Equipamiento equipo : getEquipamiento()) {
-			if(equipo.getTipo() == TipoEquipamiento.ARMA) {
-			 cantidad=equipo.calcularDanioBonificado(cantidad);
-
-			}
+	public int calcularDanioProvocado(int danioBase) {
+		if (danioBase < 0) {
+			throw new IllegalArgumentException("El daño base no puede ser negativo.");
 		}
-		return cantidad;
+		int danio = danioBase;
+		for (EfectoTemporal efecto : this.efectosActivos) {
+			danio = efecto.modificarDanioProvocado(danio);
+		}
+		return Math.max(0, danio);
 	}
 	
 	
@@ -405,6 +423,10 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		return new LinkedHashMap<>(this.tecnicasDisponibles);
 	}
 
+	@Override
+	public int compareTo(Combatiente otro) {
+		return Integer.compare(this.id, otro.id);
+	}
 
 	@Override 
 	public boolean equals(Object o) {

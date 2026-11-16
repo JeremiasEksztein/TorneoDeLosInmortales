@@ -1,5 +1,7 @@
 package eventos;
 
+import java.util.Objects;
+
 public class Posicion implements Comparable<Posicion> {
 
     private final int idPareja;
@@ -34,5 +36,24 @@ public class Posicion implements Comparable<Posicion> {
             return Integer.compare(otra.vidaTotalFinal, vidaTotalFinal);
         }
         return Integer.compare(idPareja, otra.idPareja);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        Posicion posicion = (Posicion) o;
+        return idPareja == posicion.idPareja
+                && ultimaRonda == posicion.ultimaRonda
+                && vidaTotalFinal == posicion.vidaTotalFinal;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPareja, ultimaRonda, vidaTotalFinal);
     }
 }

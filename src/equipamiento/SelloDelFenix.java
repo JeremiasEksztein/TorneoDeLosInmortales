@@ -7,8 +7,8 @@ public class SelloDelFenix extends Equipamiento{
         super("Sello Del Fenix", TipoEquipamiento.SELLO);
 	}
 
-	
+	@Override
 	public int calcularVidaMaximaBonificada(int cantidad){
-		return  ((int)(cantidad * AUMENTO_VIDA_MAX)+ cantidad);
+		return cantidad + (int) Math.round(cantidad * AUMENTO_VIDA_MAX);
 	}
 }

@@ -1,30 +1,34 @@
 package combatientes;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
 import excepciones.TipoDeCombatienteDesconocidoException;
 
 public class CreadorCombatientes {
 	private int proximoId = 1;
-		
-	public Combatiente crear(String tipoCombatiente, String nombre, Escuela escuela) {
-		Combatiente nuevoCombatiente = null;
+	private final Map<String, BiFunction<Integer, String, Combatiente>> tipos = new LinkedHashMap<>();
 
-		switch(tipoCombatiente) {
-		case "CULTIVADOR_ESPADA":
-			nuevoCombatiente = new CultivadorDeLaEspada(proximoId, nombre);
-			break;
-		case "MONJE_CUERPO_CELESTIAL":
-			nuevoCombatiente = new MonjeDelCuerpoCelestial(proximoId, nombre);
-			break;
-		case "HECHICERO_VACIO":
-			nuevoCombatiente = new HechiceroDelVacio(proximoId, nombre);
-			break;
 		
-		default: 
-			throw new TipoDeCombatienteDesconocidoException("Combatiente ingresado desconocido: " + tipoCombatiente);
-		}
-		proximoId++;
-		escuela.preparar(nuevoCombatiente);
-		return nuevoCombatiente;
+	public CreadorCombatientes() {
+		registrar("Cultivador de la Espada", CultivadorDeLaEspada::new);
+		registrar("Monje del Cuerpo Celestial", MonjeDelCuerpoCelestial::new);
+		registrar("Hechicero del Vacío", HechiceroDelVacio::new);
 	}
-	
+
+	public void registrar(String tipo, BiFunction<Integer, String, Combatiente> constructor) {
+		tipos.put(tipo, constructor);
+	}
+
+	public Combatiente crear(String tipo, String nombre, Escuela escuela) {
+		BiFunction<Integer, String, Combatiente> constructor = tipos.get(tipo);
+		if (constructor == null) {
+			throw new TipoDeCombatienteDesconocidoException("Combatiente ingresado desconocido: " + tipo);
+		}
+		Combatiente nuevo = constructor.apply(proximoId, nombre);
+		proximoId++;
+		escuela.preparar(nuevo);
+		return nuevo;
+	}
 }
