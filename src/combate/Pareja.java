@@ -101,8 +101,14 @@ public class Pareja {
 		return this.combatienteB;
 	}
 	public void recuperarEnergiaAsalto(int eNERGIA_POR_ASALTO) {
-		combatienteA.recuperarEnergia(eNERGIA_POR_ASALTO);
-		combatienteB.recuperarEnergia(eNERGIA_POR_ASALTO);		
+		if(combatienteA.estaEnPie())
+		{
+			combatienteA.recuperarEnergia(eNERGIA_POR_ASALTO);
+		}
+		if(combatienteB.estaEnPie())
+		{
+			combatienteB.recuperarEnergia(eNERGIA_POR_ASALTO);
+		}
 	}
 	@Override 
 	public boolean equals(Object o) {
