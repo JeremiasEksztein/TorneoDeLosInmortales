@@ -1,6 +1,7 @@
 package tecnicas;
 
 import combatientes.Combatiente;
+import eventos.AccionRealizada;
 
 public class MuroDelCuerpoDorado extends Tecnica {
 	private static final int REDUCCION = 20;
@@ -10,8 +11,9 @@ public class MuroDelCuerpoDorado extends Tecnica {
 	}
 
 	@Override
-	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
+	protected AccionRealizada aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
 		ejecutor.activarDefensa(REDUCCION);
+		return new AccionRealizada(ejecutor.getId(), getNombre(), ejecutor.getId(), REDUCCION);
 	}
 
 	public int getReduccion() {

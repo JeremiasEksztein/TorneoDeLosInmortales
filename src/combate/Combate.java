@@ -5,10 +5,8 @@ import combatientes.Combatiente;
 import eventos.Acontecimiento;
 import eventos.Eliminacion;
 import eventos.InicioDeCombate;
-import eventos.Interesado;
 import eventos.PublicadorAcontecimiento;
 import eventos.ResultadoCombate;
-import tecnicas.Accion;
 
 public class Combate {
 	private Pareja parejaA;
@@ -24,6 +22,9 @@ public class Combate {
 
 		if (parejaA == null || parejaB == null || publicador == null) {
 			throw new IllegalArgumentException("Las parejas y el publicador son obligatorios.");
+		}
+		if (parejaA.equals(parejaB)) {
+			throw new IllegalArgumentException("Una pareja no puede combatir contra sí misma.");
 		}
 		if (limiteAsaltos <= 0 || energiaPorAsalto < 0) {
 			throw new IllegalArgumentException("Los parámetros del combate no son válidos.");
@@ -145,12 +146,4 @@ public class Combate {
         // En empate de vida total, gana la de menor identificador ('primera' ya es la de menor ID)
         return primera;
     }
-	private void elegirObjetivo(Pareja pareja) {
-		
-	}
-	
-	private boolean esEmpate() {
-		return parejaA != null && parejaB != null
-				&& parejaA.vidaTotal() == parejaB.vidaTotal();
-	}
 }

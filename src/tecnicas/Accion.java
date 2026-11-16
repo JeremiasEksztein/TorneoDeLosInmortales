@@ -1,7 +1,9 @@
 package tecnicas;
+
 import combatientes.Combatiente;
+import eventos.AccionRealizada;
 
 public interface Accion {
-	public void ejecutar(Combatiente ejecutor, Combatiente rival) ;
-	public String getNombre();
+	AccionRealizada ejecutar(Combatiente ejecutor, Combatiente rival);
+	String getNombre();
 }

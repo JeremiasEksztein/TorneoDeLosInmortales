@@ -2,6 +2,7 @@ package eventos;
 
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Objects;
 /* Heraldo Imperial usa un "segundo constructor" para facilitar la impresión por consola
  * El famoso printStream de más abajo.
  */
@@ -14,6 +15,7 @@ public class HeraldoImperial implements Interesado {
     }
 
     public HeraldoImperial(PrintStream salida) {
+    	Objects.requireNonNull(salida, "La salida no puede ser nula.");
         this.salida = salida;
     }
 

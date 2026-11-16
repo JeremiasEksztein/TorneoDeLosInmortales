@@ -30,7 +30,7 @@ public class PublicadorAcontecimiento {
     		throw new IllegalArgumentException("El acontecimiento no puede ser nulo");
     	}
         
-        for (Interesado interesado : this.interesados) {
+    	for (Interesado interesado : new ArrayList<>(this.interesados)) {
             interesado.recibir(acontecimiento);
         }
     }
