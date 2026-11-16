@@ -8,11 +8,7 @@ public class MuroDelCuerpoDorado extends Tecnica {
 	public MuroDelCuerpoDorado() {
 		super("Muro del Cuerpo Dorado", 20, TipoTecnica.DEFENSIVA);
 	}
-	
-	public MuroDelCuerpoDorado(String nombre, int costo, TipoTecnica tipo) {
-		super(nombre, costo, tipo);
-	}
-	
+
 	@Override
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
 		ejecutor.activarDefensa(REDUCCION);

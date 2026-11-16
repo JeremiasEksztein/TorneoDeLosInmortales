@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import combate.CriterioAccion;
+import combate.CriterioDefecto;
 import combate.Pareja;
 import equipamiento.Equipamiento;
 import excepciones.EquipamientoInvalidoException;
@@ -15,11 +17,13 @@ import eventos.AccionRealizada;
 import tecnicas.Tecnica;
 import tecnicas.TipoTecnica;
 import equipamiento.TipoEquipamiento;
+import tecnicas.Accion; 
 
-public abstract class Combatiente implements Comparable<Combatiente> {
+public abstract class Combatiente implements Comparable<Combatiente>{
 	protected final int id;
 	private final String nombre;
-	
+	private CriterioAccion criterio;
+
 	private static final int USOS_POR_TECNICA = 5;
 	private static final int MAX_EQUIPAMIENTO = 3;
 	private static final int DANIO_BASE_ATAQUE_BASICO = 10;
@@ -54,6 +58,8 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		this.equipamiento = new ArrayList<>();
 		this.tecnicasDisponibles = new LinkedHashMap<>();
 		this.usadasEnCombate = new HashSet<>();
+		this.criterio = new CriterioDefecto();
+
 		//this.tecnicas = new ArrayList<>();
 	}
 
@@ -220,7 +226,10 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 	}
 
 	public Accion elegirAccion(Pareja p) {
-		return null;
+		if(this.criterio == null) {
+			throw new IllegalStateException("No se ha definido un criterio de acción para el combatiente.");
+		}
+		return this.criterio.elegirAccion(this, p);
 	}
 
 	public void procesarEfectosTemporales() {
@@ -321,6 +330,13 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 		return new AccionRealizada(this.id, "Ataque básico", objetivoRival.getId(), danioEfectivo);
 	}
 
+	public void setCriterio(CriterioAccion criterio) {
+		if (criterio == null) {
+			throw new IllegalArgumentException("El criterio de acción no puede ser nulo.");
+		}
+		this.criterio = criterio;
+	}
+
 	@Override
 	public int compareTo(Combatiente otro) {
 		return Integer.compare(this.id, otro.id);
@@ -384,6 +400,11 @@ public abstract class Combatiente implements Comparable<Combatiente> {
 	public int getId() {
 		return id;
 	}
+
+	public Map<Tecnica, Integer> getTecnicas() {
+		return new LinkedHashMap<>(this.tecnicasDisponibles);
+	}
+
 
 	@Override 
 	public boolean equals(Object o) {

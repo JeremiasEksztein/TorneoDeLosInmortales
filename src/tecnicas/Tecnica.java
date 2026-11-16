@@ -3,7 +3,7 @@ import java.util.Objects;
 
 import combatientes.Combatiente;
 
-public abstract class Tecnica {
+public abstract class Tecnica implements Accion {
 
     private final String nombre;
     private final int costo;

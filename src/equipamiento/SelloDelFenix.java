@@ -8,7 +8,7 @@ public class SelloDelFenix extends Equipamiento{
 	}
 
 	
-	public int calcularDanioRecibidoBonificado(int cantidad){
+	public int calcularVidaMaximaBonificada(int cantidad){
 		return  ((int)(cantidad * AUMENTO_VIDA_MAX)+ cantidad);
 	}
 }

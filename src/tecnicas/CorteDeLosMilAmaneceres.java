@@ -8,10 +8,6 @@ public class CorteDeLosMilAmaneceres extends Tecnica {
 	public CorteDeLosMilAmaneceres() {
 		super("Corte de los Mil Amaneceres", 10, TipoTecnica.OFENSIVA);
 	}
-	
-	public CorteDeLosMilAmaneceres(String nombre, int costo, TipoTecnica tipo) {
-		super(nombre, costo, tipo);
-	}
 
 	@Override
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
