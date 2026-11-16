@@ -1,9 +1,10 @@
 package tecnicas;
+
 import combatientes.Combatiente;
 
-public class DominioDeLaNada extends Tecnica{
-	private static final int DAÑO_BASE=10;
-	private static final int ENERGIA_QUITADA=10;
+public class DominioDeLaNada extends Tecnica {
+	private static final int DAÑO_BASE = 15;
+	private static final int ENERGIA_QUITADA = 15;
 	
 	public DominioDeLaNada() {
 		super("Dominio de la Nada", 15, TipoTecnica.OFENSIVA);
@@ -13,8 +14,15 @@ public class DominioDeLaNada extends Tecnica{
 		super(nombre, costo, tipo);
 	}
 	
+	@Override
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
 		rival.quitarEnergia(ENERGIA_QUITADA);
-		rival.recibirDanio(DAÑO_BASE);
+		int danioTotal = ejecutor.calcularDanioProvocado(DAÑO_BASE);
+		rival.recibirDanio(danioTotal);
+	}
+
+	@Override
+	public int getDaño() {
+		return DAÑO_BASE;
 	}
 }

@@ -1,8 +1,9 @@
 package tecnicas;
+
 import combatientes.Combatiente;
 
-public class MeditacionDelInmortal extends Tecnica{
-	private static final int CURACION=1;//no deberia de ir esto, recuperar vida, te da la vida inicial
+public class MeditacionDelInmortal extends Tecnica {
+	private static final int CURACION = 30;
 	
 	public MeditacionDelInmortal() {
 		super("Meditacion del Inmortal", 2, TipoTecnica.RECUPERACION);
@@ -11,7 +12,13 @@ public class MeditacionDelInmortal extends Tecnica{
 	public MeditacionDelInmortal(String nombre, int costo, TipoTecnica tipo) {
 		super(nombre, costo, tipo);
 	}
+
+	@Override
 	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
-		ejecutor.recuperarEnergia(CURACION);
+		ejecutor.recuperarVida(CURACION);
+	}
+
+	public int getCuracion() {
+		return CURACION;
 	}
 }

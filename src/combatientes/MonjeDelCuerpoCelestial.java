@@ -3,6 +3,7 @@ package combatientes;
 public class MonjeDelCuerpoCelestial extends Combatiente {
     private static final int VIDA_INICIAL = 150;
     private static final int ENERGIA_INICIAL = 300;
+    private static final double REDUCCION_DANIO = 0.25; // Reduce 25% del daño recibido
 
     public MonjeDelCuerpoCelestial(int id, String nombre) {
         super(id, nombre, VIDA_INICIAL, ENERGIA_INICIAL);
@@ -10,7 +11,9 @@ public class MonjeDelCuerpoCelestial extends Combatiente {
     
     @Override
     public int calcularDanioRecibido(int cantidad) {
-        return cantidad;
+        int danioTrasArmadura = super.calcularDanioRecibido(cantidad);
+        int reduccion = (int) Math.round(danioTrasArmadura * REDUCCION_DANIO);
+        return (danioTrasArmadura - reduccion);
     }
-
+    
 }
