@@ -389,6 +389,11 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 			throw new IllegalArgumentException("El daño base no puede ser negativo.");
 		}
 		int danio = danioBase;
+		for (Equipamiento equipo : this.equipamiento) {
+			if (equipo.getTipo() == TipoEquipamiento.ARMA) {
+				danio = equipo.calcularDanioBonificado(danio);
+			}
+		}
 		for (EfectoTemporal efecto : this.efectosActivos) {
 			danio = efecto.modificarDanioProvocado(danio);
 		}

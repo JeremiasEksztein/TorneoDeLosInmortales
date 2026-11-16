@@ -14,6 +14,7 @@ import equipamiento.SelloDelFenix;
 import eventos.AccionRealizada;
 import eventos.Acontecimiento;
 import excepciones.EquipamientoInvalidoException;
+import tecnicas.AtaqueBasico;
 import tecnicas.CorteDeLosMilAmaneceres;
 import tecnicas.DominioDeLaNada;
 import tecnicas.MeditacionDelInmortal;
@@ -107,8 +108,8 @@ class CombatienteTest {
 		assertEquals(2, c.getEquipamiento().size());
 		assertEquals(5, c.usosRestantes(t1));
 		assertEquals(5, c.usosRestantes(t2));
-		// El sello suma 30 de vida máxima, pero NO aumenta la vida actual hasta iniciar un combate
-		assertEquals(180, c.getVidaMaxima());
+		// El sello suma 60 de vida máxima, pero NO aumenta la vida actual hasta iniciar un combate
+		assertEquals(210, c.getVidaMaxima());
 		assertEquals(150, c.getVida());
 	}
     
@@ -129,18 +130,18 @@ class CombatienteTest {
     }
 
     @Test
-    void quitarEquipamientoRecortaVidaActualSiSuperaNuevoTope() {
-        CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Guerrero");
-        SelloDelFenix sello = new SelloDelFenix(); // +30 vida max
-        c.equipar(sello);
-        assertEquals(180, c.getVidaMaxima());
-        c.recuperarVida(30);
-        assertEquals(180, c.getVida());
+	void quitarEquipamientoRecortaVidaActualSiSuperaNuevoTope() {
+		CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Guerrero");
+		SelloDelFenix sello = new SelloDelFenix(); // +60 vida max
+		c.equipar(sello);
+		assertEquals(210, c.getVidaMaxima());
+		c.recuperarVida(60);
+		assertEquals(210, c.getVida());
 
-        c.quitar(sello);
-        assertEquals(150, c.getVidaMaxima());
-        assertEquals(150, c.getVida(), "La vida actual debe recortarse a la nueva vida máxima");
-    }
+		c.quitar(sello);
+		assertEquals(150, c.getVidaMaxima());
+		assertEquals(150, c.getVida(), "La vida actual debe recortarse a la nueva vida máxima");
+	}
 
     @Test
     void objetivoPorDefectoEsElRivalEnPieConMenosVidaActualYMenorId() {
@@ -206,4 +207,46 @@ class CombatienteTest {
         }
         assertTrue(pareja.puedeUsar(b, tecnicaComun), "B puede usarla si a A no le quedan usos");
     }
+    
+    @Test
+	void sePuedeEquiparYQuitarAntesYEntreCombatesModificandoCapacidades() {
+		CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Guerrero");
+		MonjeDelCuerpoCelestial blanco = new MonjeDelCuerpoCelestial(2, "Blanco");
+		EspadaCelestial espada = new EspadaCelestial();
+		AnilloEspiritual anillo = new AnilloEspiritual();
+		AtaqueBasico ataqueBasico = new AtaqueBasico();
+
+		int vidaAntes1 = blanco.getVida();
+		ataqueBasico.ejecutar(c, blanco);
+		int danioSinEspada = vidaAntes1 - blanco.getVida();
+		int energiaMaximaBase = c.getEnergiaMaxima();
+
+		c.equipar(espada);
+		c.equipar(anillo);
+		assertEquals(2, c.getEquipamiento().size());
+
+		int vidaAntes2 = blanco.getVida();
+		ataqueBasico.ejecutar(c, blanco);
+		int danioConEspada = vidaAntes2 - blanco.getVida();
+
+		assertTrue(danioConEspada > danioSinEspada, "La Espada Celestial debe aumentar el daño provocado");
+		assertTrue(c.getEnergiaMaxima() > energiaMaximaBase, "El Anillo Espiritual debe aumentar la energía máxima");
+		assertEquals(energiaMaximaBase, c.getEnergiaActual(), "Equipar anillo no sube la energía actual");
+
+		// Entre combates: al quitar objetos, vuelve al daño base y recorta energía actual si supera el nuevo tope
+		c.recuperarEnergia(c.getEnergiaMaxima());
+		assertEquals(c.getEnergiaMaxima(), c.getEnergiaActual());
+
+		c.quitar(espada);
+		c.quitar(anillo);
+		assertTrue(c.getEquipamiento().isEmpty());
+
+		int vidaAntes3 = blanco.getVida();
+		ataqueBasico.ejecutar(c, blanco);
+		int danioTrasQuitar = vidaAntes3 - blanco.getVida();
+
+		assertEquals(danioSinEspada, danioTrasQuitar);
+		assertEquals(energiaMaximaBase, c.getEnergiaMaxima());
+		assertEquals(energiaMaximaBase, c.getEnergiaActual(), "Al quitar el anillo la energía actual debe recortarse al nuevo máximo");
+	}
 }
