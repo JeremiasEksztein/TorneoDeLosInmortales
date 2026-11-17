@@ -7,28 +7,36 @@ import java.util.function.BiFunction;
 import excepciones.TipoDeCombatienteDesconocidoException;
 
 public class CreadorCombatientes {
-	private int proximoId = 1;
-	private final Map<String, BiFunction<Integer, String, Combatiente>> tipos = new LinkedHashMap<>();
+    
+    private int proximoId = 1;
 
-		
-	public CreadorCombatientes() {
-		registrar("Cultivador de la Espada", CultivadorDeLaEspada::new);
-		registrar("Monje del Cuerpo Celestial", MonjeDelCuerpoCelestial::new);
-		registrar("Hechicero del Vacío", HechiceroDelVacio::new);
-	}
+    public Combatiente crear(String tipo, String nombre, Escuela escuela) {
+        Combatiente nuevo;
 
-	public void registrar(String tipo, BiFunction<Integer, String, Combatiente> constructor) {
-		tipos.put(tipo, constructor);
-	}
+        // Evaluamos el string del tipo y llamamos al constructor correspondiente
+        switch (tipo) {
+            case "Cultivador de la Espada":
+                nuevo = new CultivadorDeLaEspada(this.proximoId, nombre);
+                break;
+                
+            case "Monje del Cuerpo Celestial":
+                nuevo = new MonjeDelCuerpoCelestial(this.proximoId, nombre);
+                break;
+                
+            case "Hechicero del Vacío":
+                nuevo = new HechiceroDelVacio(this.proximoId, nombre);
+                break;
+                
+            default:
+                // Si escriben mal el nombre o mandan un tipo que no existe, falla con una excepción
+                throw new TipoDeCombatienteDesconocidoException("Combatiente ingresado desconocido: " + tipo);
+        }
 
-	public Combatiente crear(String tipo, String nombre, Escuela escuela) {
-		BiFunction<Integer, String, Combatiente> constructor = tipos.get(tipo);
-		if (constructor == null) {
-			throw new TipoDeCombatienteDesconocidoException("Combatiente ingresado desconocido: " + tipo);
-		}
-		Combatiente nuevo = constructor.apply(proximoId, nombre);
-		proximoId++;
-		escuela.preparar(nuevo);
-		return nuevo;
-	}
+        // Aumentamos el contador para el próximo personaje
+        this.proximoId++;
+        // Le pasamos el personaje a la escuela para que le dé sus técnicas y equipamiento
+        escuela.preparar(nuevo);
+        
+        return nuevo;
+    }
 }
