@@ -104,43 +104,20 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 	}
 	/*
 	Seccion 2:
-	"Muro del Cuerpo Dorado: reduce el daño que recibe el ejecutor durante el resto del combate."
+	
 	Seccion 6:
 	"Criterio por defecto, en este orden: una técnica de recuperación si le falta vida; una defensiva si no tiene una activa..."
 	*/
 	public void recibirDanio(int danioBase) {
 		if (danioBase < 0) {
 			throw new IllegalArgumentException("El daño base no puede ser negativo.");
-		}
+		}//"Muro del Cuerpo Dorado: reduce el daño que recibe el ejecutor durante el resto del combate."
 		int danioFinal = calcularDanioRecibido(danioBase);
 		if (this.tieneDefensaActiva()) {
 			danioFinal = Math.max(0, danioFinal - this.reduccionDefensiva);
 		}
 		this.vidaActual = Math.max(0, this.vidaActual - danioFinal);
 	}
-	
-	/*
-	public void recibirDanio(int danioBase) {
-		if (danioBase < 0) {
-			throw new IllegalArgumentException("El daño base no puede ser negativo.");
-		}
-		int danioFinal = calcularDanioRecibido(danioBase);
-		if(this.tieneDefensaActiva()) {//es una manera, acá es como si fuera un consumible que,
-			if(this.reduccionDefensiva < danioFinal) {//si el daño lo rompe ya no lo tiene más
-				danioFinal -= this.reduccionDefensiva;
-				this.reduccionDefensiva = 0;
-			}
-			else {
-				this.reduccionDefensiva-=danioFinal;
-				return;
-			}
-		}
-		this.vidaActual -= danioFinal;
-		if(this.vidaActual < 0) {
-			this.vidaActual = 0;
-		}
-	}
-	*/
 	
 	public void recuperarVida(int cantidad) {
 		if(cantidad < 0) {
@@ -384,16 +361,27 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		}
 	}
 	
-	public int calcularDanioProvocado(int danioBase) {
-		if (danioBase < 0) {
-			throw new IllegalArgumentException("El daño base no puede ser negativo.");
-		}
-		int danio = danioBase;
-		for (EfectoTemporal efecto : this.efectosActivos) {
-			danio = efecto.modificarDanioProvocado(danio);
-		}
-		return Math.max(0, danio);
-	}
+public int calcularDanioProvocado(int danioBase) {
+    if (danioBase < 0) {
+        throw new IllegalArgumentException("El daño base no puede ser negativo.");
+    }
+    
+    int danioFinal = danioBase;
+    
+    for (Equipamiento equipo : this.getEquipamiento()) {
+        if (equipo.getTipo() == TipoEquipamiento.ARMA) {
+            danioFinal = equipo.calcularDanioBonificado(danioFinal);
+        }
+    }
+
+    if (this.efectosActivos != null) {
+        for (EfectoTemporal efecto : this.efectosActivos) {
+            danioFinal = efecto.modificarDanioProvocado(danioFinal);
+        }
+    }
+
+    return Math.max(0, danioFinal);
+}
 	
 	
 	public int calcularDanioRecibido(int n){
