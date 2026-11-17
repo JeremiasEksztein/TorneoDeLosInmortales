@@ -22,13 +22,12 @@ import equipamiento.TipoEquipamiento;
 import tecnicas.Accion; 
 
 public abstract class Combatiente implements Comparable<Combatiente>{
-	protected final int id;
+	private final int id;
 	private final String nombre;
 	private CriterioAccion criterio;
 
 	private static final int USOS_POR_TECNICA = 5;
 	private static final int MAX_EQUIPAMIENTO = 3;
-	private static final int DANIO_BASE_ATAQUE_BASICO = 10;
 	
 	private final int vidaBase;
 	private final int energiaBase;
@@ -38,12 +37,12 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 	private int energiaActual;
 	private int energiaMaxima;
 	
-	private int reduccionDefensiva;
+	private int reduccionDefensiva = 0;
 		
 	private List<Equipamiento> equipamiento;
 	private Map<Tecnica, Integer> tecnicasDisponibles;
 	private Set<Tecnica> usadasEnCombate;
-	private final List<EfectoTemporal> efectosActivos = new ArrayList<>();
+	private List<EfectoTemporal> efectosActivos = new ArrayList<>();
 
 	/*DOC: La vidaMaxima y energía maxima, llegan por parámetro, en lugar
 	 * de estar estar definidas.
@@ -361,7 +360,7 @@ public abstract class Combatiente implements Comparable<Combatiente>{
 		}
 	}
 	
-public int calcularDanioProvocado(int danioBase) {
+	public int calcularDanioProvocado(int danioBase) {
     if (danioBase < 0) {
         throw new IllegalArgumentException("El daño base no puede ser negativo.");
     }
