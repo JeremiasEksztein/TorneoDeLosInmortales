@@ -2,6 +2,7 @@ package eventos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CronistaDeLaSecta implements Interesado {
 
@@ -10,6 +11,7 @@ public class CronistaDeLaSecta implements Interesado {
 
     @Override
     public void recibir(Acontecimiento a) {
+    	Objects.requireNonNull(a, "El acontecimiento no puede ser nulo.");
         historial.add(a);
         a.aplicarA(tabla);
     }

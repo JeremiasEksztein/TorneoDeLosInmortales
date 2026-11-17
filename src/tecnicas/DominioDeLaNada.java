@@ -1,6 +1,7 @@
 package tecnicas;
 
 import combatientes.Combatiente;
+import eventos.AccionRealizada;
 
 public class DominioDeLaNada extends Tecnica {
 	private static final int DAÑO_BASE = 15;
@@ -11,10 +12,13 @@ public class DominioDeLaNada extends Tecnica {
 	}
 	
 	@Override
-	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
+	protected AccionRealizada aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
+		int vidaAntes = rival.getVida();
 		rival.quitarEnergia(ENERGIA_QUITADA);
 		int danioTotal = ejecutor.calcularDanioProvocado(DAÑO_BASE);
 		rival.recibirDanio(danioTotal);
+		int danioEfectivo = vidaAntes - rival.getVida();
+		return new AccionRealizada(ejecutor.getId(), getNombre(), rival.getId(), danioEfectivo);
 	}
 
 	@Override

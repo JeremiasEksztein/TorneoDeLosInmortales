@@ -1,17 +1,19 @@
 package tecnicas;
 
 import combatientes.Combatiente;
+import eventos.AccionRealizada;
 
 public class MuroDelCuerpoDorado extends Tecnica {
-	private static final int REDUCCION = 20;
+	private static final int REDUCCION = 5;
 	
 	public MuroDelCuerpoDorado() {
 		super("Muro del Cuerpo Dorado", 20, TipoTecnica.DEFENSIVA);
 	}
 
 	@Override
-	public void aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
+	protected AccionRealizada aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
 		ejecutor.activarDefensa(REDUCCION);
+		return new AccionRealizada(ejecutor.getId(), getNombre(), ejecutor.getId(), REDUCCION);
 	}
 
 	public int getReduccion() {

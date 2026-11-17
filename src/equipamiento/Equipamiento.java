@@ -1,29 +1,30 @@
 package equipamiento;
 
+import java.util.Objects;
+
 public abstract class Equipamiento {
 
-    private String nombre;
-    private TipoEquipamiento tipo;
-    private int daño;
-    private int dañoRecibido;
-    private int vidaMaxima;
-    private int energiaMaxima;
+    private final String nombre;
+    private final TipoEquipamiento tipo;
 
     protected Equipamiento(String nombre, TipoEquipamiento tipo) {
-        this.nombre = nombre;
+    	if (nombre == null || nombre.isBlank()) {
+			throw new IllegalArgumentException("El nombre del equipamiento no puede ser nulo ni vacío.");
+		}
+		if (tipo == null) {
+			throw new IllegalArgumentException("El tipo de equipamiento no puede ser nulo.");
+		}
+		this.nombre = nombre;
         this.tipo = tipo;
-   
     }
 
     public String getNombre() {
         return nombre;
     }
 
-
     public TipoEquipamiento getTipo() {
         return tipo;
     }
-    
     
     public int calcularDanioBonificado(int cantidad) {return cantidad;}
     public int calcularEnergiaBonificada(int cantidad){return cantidad;}
@@ -42,6 +43,9 @@ public abstract class Equipamiento {
 		return this.nombre.equals(e.nombre);
     }
     
-   
+    @Override
+	public int hashCode() {
+		return Objects.hash(this.nombre);
+	}
    
 }

@@ -26,7 +26,13 @@ public class Torneo {
     }
 
     public void inscribir(Pareja p) {
-        for (Pareja existente : parejasInscriptas) {
+    	if (p == null) {
+			throw new IllegalArgumentException("La pareja a inscribir no puede ser nula.");
+		}
+		if (campeon != null) {
+			throw new IllegalStateException("No se pueden inscribir parejas en un torneo ya finalizado.");
+		}
+    	for (Pareja existente : parejasInscriptas) {
             if (existente.equals(p)) {
                 throw new InscripcionDuplicadaException(
                     "La pareja " + p.getId() + " ya está inscripta");
@@ -40,7 +46,11 @@ public class Torneo {
     }
 
     public void iniciar() {
-        int cantidad = parejasInscriptas.size();
+    	if (campeon != null) {
+			throw new IllegalStateException("El torneo ya fue ejecutado.");
+		}
+    	
+    	int cantidad = parejasInscriptas.size();
         if (cantidad != 4 && cantidad != 8) {
             throw new CantidadDeParejasInvalidaException(
                 "El torneo requiere 4 u 8 parejas y hay " + cantidad);

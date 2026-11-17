@@ -2,6 +2,7 @@ package tecnicas;
 import java.util.Objects;
 
 import combatientes.Combatiente;
+import eventos.AccionRealizada;
 
 public abstract class Tecnica implements Accion {
 
@@ -10,21 +11,37 @@ public abstract class Tecnica implements Accion {
     private final TipoTecnica tipo;
 
     protected Tecnica(String nombre, int costo, TipoTecnica tipo) {
-        this.nombre = nombre;
+    	if (nombre == null || nombre.isBlank()) {
+			throw new IllegalArgumentException("El nombre de la técnica no puede ser nulo ni vacío.");
+		}
+		if (costo < 0) {
+			throw new IllegalArgumentException("El costo de energía no puede ser negativo.");
+		}
+		if (tipo == null) {
+			throw new IllegalArgumentException("El tipo de técnica no puede ser nulo.");
+		}
+    	this.nombre = nombre;
         this.costo = costo;
         this.tipo = tipo;
     }
 
-    // Gasta energía (con el costo calculado por el ejecutor), registra el uso y aplica el efecto.
-    public void ejecutar(Combatiente ejecutor, Combatiente rival) {
-        ejecutor.gastarEnergia(costo);
-        ejecutor.registrarUso(this);
-        aplicarEfecto(ejecutor, rival);
-    }
+    // valida antes de mutar estado, gasta energía, registra el uso y aplica el efecto.
+ 	@Override
+ 	public final AccionRealizada ejecutar(Combatiente ejecutor, Combatiente rival) {
+ 		if (ejecutor == null || rival == null) {
+ 			throw new IllegalArgumentException("El ejecutor y el rival no pueden ser nulos.");
+ 		}
+ 		if (!ejecutor.puedeEjecutar(this)) {
+ 			throw new IllegalStateException("El combatiente no tiene energía o usos suficientes para ejecutar " + nombre);
+ 		}
+ 		ejecutor.gastarEnergia(costo);
+ 		ejecutor.registrarUso(this);
+ 		return aplicarEfecto(ejecutor, rival);
+ 	}
 
     // Cada técnica concreta actualiza el estado del personaje afectado.
-    public abstract void aplicarEfecto(Combatiente ejecutor, Combatiente rival);
-
+ 	protected abstract AccionRealizada aplicarEfecto(Combatiente ejecutor, Combatiente rival);
+ 	
     public int getCosto() {
         return costo;
     }
@@ -44,14 +61,14 @@ public abstract class Tecnica implements Accion {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Tecnica)) return false;
-        Tecnica otra = (Tecnica) o;
-        return nombre.equals(otra.nombre);
+    	if (this == o) return true;
+    	if (o == null || getClass() != o.getClass()) return false;
+    	
+    	return getNombre().equals(((Tecnica) o).getNombre());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nombre);
+    	return getNombre().hashCode();
     }
 }

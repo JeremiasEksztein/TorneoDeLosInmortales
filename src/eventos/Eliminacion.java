@@ -1,24 +1,16 @@
 package eventos;
 
-import combatientes.Combatiente;
 
 public class Eliminacion extends Acontecimiento {
 
     private final int idCombatiente;
     private final String nombre;
 
-    public Eliminacion(Combatiente rival) {
-        super(rival.getNombre() + " (combatiente " + rival.getId() + ") queda fuera de combate");
-        this.idCombatiente = rival.getId();
-        this.nombre = rival.getNombre();
+    public Eliminacion(int idCombatiente, String nombre) {
+    	super(nombre + " (combatiente " + idCombatiente + ") queda fuera de combate");
+    	this.idCombatiente = idCombatiente;
+    	this.nombre = nombre;
     }
-
-    
-	public Eliminacion(int i, String string) {
-		super(string + " (combatiente " + i + ") queda fuera de combate");
-		this.idCombatiente = i;
-		this.nombre = string;
-	}
 
 
 	public int getIdCombatiente() { return idCombatiente; }

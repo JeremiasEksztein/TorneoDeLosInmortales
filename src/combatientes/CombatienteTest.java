@@ -93,25 +93,25 @@ class CombatienteTest {
     }
 
     @Test
-    void escuelaPreparaCombatienteCorrectamente() {
-        Tecnica t1 = new CorteDeLosMilAmaneceres();
-        Tecnica t2 = new RugidoDeLaBestiaPrimordial();
-        EspadaCelestial espada = new EspadaCelestial();
-        SelloDelFenix sello = new SelloDelFenix();
+	void escuelaPreparaCombatienteCorrectamente() {
+		Tecnica t1 = new CorteDeLosMilAmaneceres();
+		Tecnica t2 = new RugidoDeLaBestiaPrimordial();
+		EspadaCelestial espada = new EspadaCelestial();
+		SelloDelFenix sello = new SelloDelFenix();
 
-        Escuela escuelaEspada = new Escuela("Escuela de la Espada Celestial", List.of(t1, t2), List.of(espada, sello));
-        CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Guerrero");
+		Escuela escuelaEspada = new Escuela("Escuela de la Espada Celestial", List.of(t1, t2), List.of(espada, sello));
+		CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Guerrero");
 
-        escuelaEspada.preparar(c);
+		escuelaEspada.preparar(c);
 
-        assertEquals(2, c.getEquipamiento().size());
-        assertEquals(5, c.usosRestantes(t1));
-        assertEquals(5, c.usosRestantes(t2));
-        // El sello suma 30 de vida máxima
-        assertEquals(180, c.getVidaMaxima());
-        assertEquals(180, c.getVida());
-    }
-
+		assertEquals(2, c.getEquipamiento().size());
+		assertEquals(5, c.usosRestantes(t1));
+		assertEquals(5, c.usosRestantes(t2));
+		// El sello suma 30 de vida máxima, pero NO aumenta la vida actual hasta iniciar un combate
+		assertEquals(180, c.getVidaMaxima());
+		assertEquals(150, c.getVida());
+	}
+    
     @Test
     void noSePuedeEquiparMasDeTresObjetosNiDosDeLaMismaCategoria() {
         CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Guerrero");
@@ -159,26 +159,27 @@ class CombatienteTest {
     }
 
     @Test
-    void accionPorDefectoPriorizaCuracionSiFaltaVidaLuegoOfensivaConMasUsos() {
-        CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Cultivador");
-        Tecnica curacion = new MeditacionDelInmortal();
-        Tecnica of1 = new CorteDeLosMilAmaneceres();
-        Tecnica of2 = new RugidoDeLaBestiaPrimordial();
+	void accionPorDefectoPriorizaCuracionLuegoDefensivaLuegoOfensivaConMasUsos() {
+		CultivadorDeLaEspada c = new CultivadorDeLaEspada(1, "Cultivador");
+		MonjeDelCuerpoCelestial comp = new MonjeDelCuerpoCelestial(2, "Compañero");
+		Pareja pareja = new Pareja(c, comp);
 
-        c.aprenderTecnica(curacion);
-        c.aprenderTecnica(of1);
-        c.aprenderTecnica(of2);
+		Tecnica curacion = new MeditacionDelInmortal();
+		Tecnica of1 = new CorteDeLosMilAmaneceres();
+		Tecnica of2 = new RugidoDeLaBestiaPrimordial();
 
-        // Sin daño recibido: debe elegir la ofensiva con más usos
-        c.registrarUso(of1); // of1 tiene 4 usos, of2 tiene 5 usos
-        Tecnica elegidaSinDanio = c.seleccionarTecnicaPorDefecto(null);
-        assertEquals(of2, elegidaSinDanio, "Con vida completa debe priorizar la técnica ofensiva con más usos");
+		c.aprenderTecnica(curacion);
+		c.aprenderTecnica(of1);
+		c.aprenderTecnica(of2);
 
-        // Si le falta vida: debe priorizar la curación
-        c.recibirDanio(20);
-        Tecnica elegidaHerido = c.seleccionarTecnicaPorDefecto(null);
-        assertEquals(curacion, elegidaHerido, "Herido debe priorizar la técnica de recuperación");
-    }
+		// Sin daño recibido: debe elegir la ofensiva con más usos
+		c.registrarUso(of1); // of1 tiene 4 usos, of2 tiene 5 usos
+		assertEquals(of2, c.elegirAccion(pareja), "Con vida completa debe priorizar la técnica ofensiva con más usos");
+
+		// Si le falta vida: debe priorizar la curación
+		c.recibirDanio(20);
+		assertEquals(curacion, c.elegirAccion(pareja), "Herido debe priorizar la técnica de recuperación");
+	}
 
     @Test
     void reglaDelCompanieroBloqueaTecnicaUsadaHastaQueSeAgotenUsosOCaiga() {
