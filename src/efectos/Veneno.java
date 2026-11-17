@@ -18,6 +18,6 @@ public class Veneno extends EfectoTemporal {
 		int vidaAntes = afectado.getVida();
 		afectado.recibirDanioDirecto(this.danioPorTurno);
 		int danio = vidaAntes - afectado.getVida();
-		return danio > 0 ? "El combatiente " + afectado.getId() + " sufre daño por Veneno (" + danio + " puntos)" : null;
+		return danio > 0 ? "El combatiente " + afectado.getNombre() + " sufre daño por Veneno (" + danio + " puntos)" : null;
 	}
 }

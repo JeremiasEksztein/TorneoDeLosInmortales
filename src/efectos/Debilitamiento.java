@@ -24,6 +24,6 @@ public class Debilitamiento extends EfectoTemporal {
 	@Override
 	protected String aplicarYDescribir(Combatiente afectado) {
 		int porcentaje = (int) Math.round(this.factorReduccion * 100);
-		return "El combatiente " + afectado.getId() + " está bajo Debilitamiento (-" + porcentaje + "% de daño)";
+		return "El combatiente " + afectado.getNombre() + " está bajo Debilitamiento (-" + porcentaje + "% de daño)";
 	}
 }
