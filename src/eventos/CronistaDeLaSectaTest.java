@@ -15,7 +15,7 @@ class CronistaDeLaSectaTest {
     void guardaLosAcontecimientosEnElOrdenEnQueLosRecibe() {
         CronistaDeLaSecta cronista = new CronistaDeLaSecta();
         Acontecimiento inicio = new InicioDeCombate(1, 1, 2);
-        Acontecimiento accion = new AccionRealizada(1, "Ataque básico", 3, 10);
+        Acontecimiento accion = new AccionRealizada("Anubis", "Ataque básico", "Kael", 10);
         Acontecimiento caida = new Eliminacion(3, "Kael");
 
         cronista.recibir(inicio);

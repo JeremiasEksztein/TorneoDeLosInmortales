@@ -69,10 +69,10 @@ public class TorneoDeLosInmortales {
 		torneo.suscribir(cronista);
 
 		// 4. Formación e inscripción de 4 parejas
-		Pareja pareja1 = new Pareja(1, aurelio, nebula);
-		Pareja pareja2 = new Pareja(2, kael, darian);
-		Pareja pareja3 = new Pareja(3, lyra, thorne);
-		Pareja pareja4 = new Pareja(4, vaelen, seraphina);
+		Pareja pareja1 = new Pareja(1, aurelio, kael);
+		Pareja pareja2 = new Pareja(2, nebula, darian);
+		Pareja pareja3 = new Pareja(3, seraphina, thorne);
+		Pareja pareja4 = new Pareja(4, vaelen, lyra);
 
 		torneo.inscribir(pareja1);
 		torneo.inscribir(pareja2);

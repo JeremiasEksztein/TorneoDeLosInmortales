@@ -20,7 +20,7 @@ public class NieblaVenenosa extends Tecnica {
 		rival.recibirDanio(danioTotal);
 		rival.aplicarEfectoTemporal(new Veneno(DANIO_VENENO, DURACION_TURNOS));
 		int danioEfectivo = vidaAntes - rival.getVida();
-		return new AccionRealizada(ejecutor.getId(), getNombre(), rival.getId(), danioEfectivo);
+		return new AccionRealizada(ejecutor.getNombre(), getNombre(), rival.getNombre(), danioEfectivo);
 	}
 
 	@Override

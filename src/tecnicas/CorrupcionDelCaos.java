@@ -20,7 +20,7 @@ public class CorrupcionDelCaos extends Tecnica {
 		rival.recibirDanio(danioTotal);
 		rival.aplicarEfectoTemporal(new Debilitamiento(REDUCCION_ATAQUE, DURACION_TURNOS));
 		int danioEfectivo = vidaAntes - rival.getVida();
-		return new AccionRealizada(ejecutor.getId(), getNombre(), rival.getId(), danioEfectivo);
+		return new AccionRealizada(ejecutor.getNombre(), getNombre(), rival.getNombre(), danioEfectivo);
 	}
 
 	@Override

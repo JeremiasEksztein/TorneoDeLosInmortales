@@ -99,8 +99,8 @@ class CombateTest {
 				.map(AccionRealizada.class::cast)
 				.toList();
 
-		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getIdEjecutor() == 3));
-		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getIdObjetivo() == 3));
+		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getNomObjetivo() == "B1"));
+		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getNomObjetivo() == "B1"));
 	}
 
 	@Test

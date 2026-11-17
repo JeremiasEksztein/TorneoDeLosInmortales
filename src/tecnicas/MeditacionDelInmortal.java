@@ -15,7 +15,7 @@ public class MeditacionDelInmortal extends Tecnica {
 		int vidaAntes = ejecutor.getVida();
 		ejecutor.recuperarVida(CURACION);
 		int puntosCurados = ejecutor.getVida() - vidaAntes;
-		return new AccionRealizada(ejecutor.getId(), getNombre(), ejecutor.getId(), puntosCurados);
+		return new AccionRealizada(ejecutor.getNombre(), getNombre(), ejecutor.getNombre(), puntosCurados);
 	}
 
 	public int getCuracion() {

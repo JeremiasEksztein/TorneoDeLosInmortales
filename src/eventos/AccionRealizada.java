@@ -2,24 +2,24 @@ package eventos;
 
 public class AccionRealizada extends Acontecimiento {
 
-    private final int idEjecutor;
+    private final String nomEjecutor;
     private final String nombreAccion;
-    private final int idObjetivo;
+    private final String nomObjetivo;
     private final int puntos;
 
-    public AccionRealizada(int idEjecutor, String nombreAccion,
-                           int idObjetivo, int puntos) {
-    	super(idEjecutor == idObjetivo
-    	        ? "El combatiente " + idEjecutor + " usa " + nombreAccion + " sobre sí mismo (" + puntos + " puntos)"
-    	        : "El combatiente " + idEjecutor + " usa " + nombreAccion + " sobre el combatiente " + idObjetivo + " (" + puntos + " puntos)");
-        this.idEjecutor = idEjecutor;
+    public AccionRealizada(String nomEjecutor, String nombreAccion,
+                           String nomObjetivo, int puntos) {
+    	super(nomEjecutor == nomObjetivo
+    	        ? "El combatiente " + nomEjecutor + " usa " + nombreAccion + " sobre sí mismo (" + puntos + " puntos)"
+    	        : "El combatiente " + nomEjecutor + " usa " + nombreAccion + " sobre el combatiente " + nomObjetivo + " (" + puntos + " puntos)");
+        this.nomEjecutor = nomEjecutor;
         this.nombreAccion = nombreAccion;
-        this.idObjetivo = idObjetivo;
+        this.nomObjetivo = nomObjetivo;
         this.puntos = puntos;
     }
 
-    public int getIdEjecutor() { return idEjecutor; }
+    public String getNomEjecutor() { return nomEjecutor; }
     public String getNombreAccion() { return nombreAccion; }
-    public int getIdObjetivo() { return idObjetivo; }
+    public String getNomObjetivo() { return nomObjetivo; }
     public int getPuntos() { return puntos; }
 }

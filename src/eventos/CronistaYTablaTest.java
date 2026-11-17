@@ -25,7 +25,7 @@ class CronistaYTablaTest {
     void losAcontecimientosSimplesNoAfectanLaTabla() {
         CronistaDeLaSecta cronista = new CronistaDeLaSecta();
 
-        cronista.recibir(new AccionRealizada(1, "Ataque básico", 2, 10));
+        cronista.recibir(new AccionRealizada("Perseo", "Ataque básico", "Percefone", 10));
         cronista.recibir(new Proclamacion(1, "A", "B"));
 
         assertTrue(cronista.tablaDePosiciones().isEmpty());

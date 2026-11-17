@@ -12,7 +12,7 @@ public class AtaqueBasico implements Accion {
 		int vidaAntes = rival.getVida();
 		rival.recibirDanio(ejecutor.calcularDanioProvocado(DANIO_BASE));
 		int danioEfectivo = vidaAntes - rival.getVida();
-		return new AccionRealizada(ejecutor.getId(), getNombre(), rival.getId(), danioEfectivo);
+		return new AccionRealizada(ejecutor.getNombre(), getNombre(), rival.getNombre(), danioEfectivo);
 	}
 
 	@Override

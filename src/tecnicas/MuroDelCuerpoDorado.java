@@ -13,7 +13,7 @@ public class MuroDelCuerpoDorado extends Tecnica {
 	@Override
 	protected AccionRealizada aplicarEfecto(Combatiente ejecutor, Combatiente rival) {
 		ejecutor.activarDefensa(REDUCCION);
-		return new AccionRealizada(ejecutor.getId(), getNombre(), ejecutor.getId(), REDUCCION);
+		return new AccionRealizada(ejecutor.getNombre(), getNombre(), ejecutor.getNombre(), REDUCCION);
 	}
 
 	public int getReduccion() {

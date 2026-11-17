@@ -17,11 +17,11 @@ class AcontecimientoTest {
 
     @Test
     void accionRealizadaGuardaEjecutorAccionYObjetivo() {
-        AccionRealizada a = new AccionRealizada(1, "Ataque básico", 4, 12);
+        AccionRealizada a = new AccionRealizada("Maradona", "Ataque básico", "Messi", 12);
 
-        assertEquals(1, a.getIdEjecutor());
+        assertEquals("Maradona", a.getNomEjecutor());
         assertEquals("Ataque básico", a.getNombreAccion());
-        assertEquals(4, a.getIdObjetivo());
+        assertEquals("Messi", a.getNomObjetivo());
         assertEquals(12, a.getPuntos());
     }
 
@@ -39,7 +39,7 @@ class AcontecimientoTest {
         TablaDePosiciones tabla = new TablaDePosiciones();
 
         new InicioDeCombate(1, 1, 2).aplicarA(tabla);
-        new AccionRealizada(1, "Ataque básico", 3, 10).aplicarA(tabla);
+        new AccionRealizada("A", "Ataque básico", "B", 10).aplicarA(tabla);
         new Proclamacion(1, "A", "B").aplicarA(tabla);
 
         assertTrue(tabla.ordenada().isEmpty());

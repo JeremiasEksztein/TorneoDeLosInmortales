@@ -16,7 +16,7 @@ public class RugidoDeLaBestiaPrimordial extends Tecnica {
 		int danioTotal = ejecutor.calcularDanioProvocado(DAÑO_BASE);
 		rival.recibirDanio(danioTotal);
 		int danioEfectivo = vidaAntes - rival.getVida();
-		return new AccionRealizada(ejecutor.getId(), getNombre(), rival.getId(), danioEfectivo);
+		return new AccionRealizada(ejecutor.getNombre(), getNombre(), rival.getNombre(), danioEfectivo);
 	}
 
 	@Override
