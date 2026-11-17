@@ -35,37 +35,26 @@ class CombateTest {
 
 		Combate primerCombate = new Combate(p1, p2, 1, new PublicadorAcontecimiento());
 		primerCombate.ejecutar();
-
+		//Se hace explicita la perdida de vida porque un combate no garantiza que se gaste la misma
+		a1.recibirDanio(20);
+		
 		int usosDespuesDelPrimero = a1.usosRestantes(corte);
+		
+		//Verificar que se cambio el estado del combatiente luego del combate
 		assertTrue(usosDespuesDelPrimero < 5, "Debe haber consumido usos de la técnica en el primer combate");
+		assertTrue(a1.getVida() < a1.getVidaMaxima()); 
+		
 
-		CultivadorDeLaEspada c1 = new CultivadorDeLaEspada(5, "C1");
-		MonjeDelCuerpoCelestial c2 = new MonjeDelCuerpoCelestial(6, "C2");
-		Pareja p3 = new Pareja(3, c1, c2);
-
-		Combate segundoCombate = new Combate(p1, p3, 2, new PublicadorAcontecimiento());
 		p1.reiniciarParaCombate();
+		
 		assertEquals(a1.getVidaMaxima(), a1.getVida());
 		assertEquals(a1.getEnergiaMaxima(), a1.getEnergiaActual());
 		assertEquals(a2.getVidaMaxima(), a2.getVida());
+		assertEquals(a2.getEnergiaMaxima(), a2.getEnergiaActual());
 		assertEquals(usosDespuesDelPrimero, a1.usosRestantes(corte));
-		assertNotNull(segundoCombate);
+		
 	}
 
-	@Test
-	void sinEnergiaOSinUsosRestantesRecurreAAtaqueBasico() {
-		HechiceroDelVacio h = new HechiceroDelVacio(1, "Hechicero");
-		MonjeDelCuerpoCelestial comp = new MonjeDelCuerpoCelestial(2, "Comp");
-		Tecnica corte = new CorteDeLosMilAmaneceres();
-		h.aprenderTecnica(corte);
-		Pareja p = new Pareja(1, h, comp);
-
-		for (int i = 0; i < 5; i++) {
-			h.registrarUso(corte);
-		}
-		assertEquals(0, h.usosRestantes(corte));
-		assertEquals("Ataque básico", h.elegirAccion(p).getNombre());
-	}
 
 	@Test
 	void caidoNoActuaNiEsElegidoComoObjetivo() {
@@ -99,12 +88,12 @@ class CombateTest {
 				.map(AccionRealizada.class::cast)
 				.toList();
 
-		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getNomObjetivo() == "B1"));
-		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getNomObjetivo() == "B1"));
+		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getNomEjecutor().equals("B1")));
+		assertTrue(accionesPosteriores.stream().noneMatch(a -> a.getNomObjetivo().equals("B1")));
 	}
 
 	@Test
-	void desempateAlLimiteDeAsaltosGanaMayorVidaTotalYMenorId() {
+	void desempateAlLimiteDeAsaltosGanaMayorVidaTotal() {
 		MonjeDelCuerpoCelestial a1 = new MonjeDelCuerpoCelestial(1, "A1");
 		MonjeDelCuerpoCelestial a2 = new MonjeDelCuerpoCelestial(2, "A2");
 		a1.aprenderTecnica(new MuroDelCuerpoDorado());
@@ -119,8 +108,28 @@ class CombateTest {
 		Pareja p2 = new Pareja(2, b1, b2);
 
 		ResultadoCombate resultado = new Combate(p1, p2, 1, new PublicadorAcontecimiento()).ejecutar();
-		assertNotNull(resultado);
 		int idEsperado = p1.vidaTotal() >= p2.vidaTotal() ? p1.getId() : p2.getId();
 		assertEquals(idEsperado, resultado.getIdGanadora());
+	}
+	
+	@Test
+	void empateDeVidaTotalAlLimiteDeAsaltosGanaLaParejaDeMenorId() {
+
+	    MonjeDelCuerpoCelestial a1 = new MonjeDelCuerpoCelestial(1, "A1");
+	    MonjeDelCuerpoCelestial a2 = new MonjeDelCuerpoCelestial(2, "A2");
+
+	    MonjeDelCuerpoCelestial b1 = new MonjeDelCuerpoCelestial(3, "B1");
+	    MonjeDelCuerpoCelestial b2 = new MonjeDelCuerpoCelestial(4, "B2");
+
+	    Pareja p1 = new Pareja(1, a1, a2);
+	    Pareja p2 = new Pareja(2, b1, b2);
+
+	    // 1 limite de asalto para forzar que llegue al limite
+	    Combate combate = new Combate(p1, p2, 1, new PublicadorAcontecimiento(), 1, 0);
+
+	    ResultadoCombate resultado = combate.ejecutar();
+
+	    assertEquals(resultado.getVidaTotalA(), resultado.getVidaTotalB(), "El escenario debe terminar con la misma vida total");
+	    assertEquals(1, resultado.getIdGanadora(), "Ante igualdad de vida total debe ganar la pareja de menor ID");
 	}
 }

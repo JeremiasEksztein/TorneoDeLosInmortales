@@ -34,13 +34,23 @@ class TecnicaTest {
 		AccionRealizada resMonje = corte2.ejecutar(monje, blanco2);
 		AccionRealizada resHechicero = corte3.ejecutar(hechicero, blanco3);
 
+		
+		assertNotEquals(
+			    resCultivador.getPuntos(),
+			    resMonje.getPuntos()
+			    );
+
+		assertNotEquals(
+			    resCultivador.getPuntos(),
+			    resHechicero.getPuntos()
+			    );
+		//Validacion de implementacion
 		// Cultivador de la Espada potencia +30% el daño (25 * 1.30 = 33)
 		// Monje y Hechicero infligen el daño base sin bono ofensivo (25)
 		assertEquals(33, resCultivador.getPuntos());
 		assertEquals(25, resMonje.getPuntos());
 		assertEquals(25, resHechicero.getPuntos());
-		assertTrue(resCultivador.getPuntos() > resMonje.getPuntos(),
-				"La misma técnica debe provocar más daño cuando la ejecuta un Cultivador de la Espada");
+		
 	}
 
 	@Test

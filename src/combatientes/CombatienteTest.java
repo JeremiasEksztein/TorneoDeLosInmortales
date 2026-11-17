@@ -126,7 +126,14 @@ class CombatienteTest {
         // Intento de categoría duplicada en un combatiente nuevo
         CultivadorDeLaEspada c2 = new CultivadorDeLaEspada(2, "Guerrero 2");
         c2.equipar(new EspadaCelestial());
+        int cantidadAntes = c2.getEquipamiento().size();
         assertThrows(EquipamientoInvalidoException.class, () -> c2.equipar(new EspadaCelestial()));
+        assertEquals(cantidadAntes, c2.getEquipamiento().size());
+        
+        cantidadAntes = c.getEquipamiento().size();
+
+        assertThrows(EquipamientoInvalidoException.class, () -> c.equipar(new SelloDelFenix()));
+        assertEquals(cantidadAntes,c.getEquipamiento().size());
     }
 
     @Test
@@ -147,16 +154,18 @@ class CombatienteTest {
     void objetivoPorDefectoEsElRivalEnPieConMenosVidaActualYMenorId() {
         CultivadorDeLaEspada atacante = new CultivadorDeLaEspada(1, "Atacante");
 
-        MonjeDelCuerpoCelestial r1 = new MonjeDelCuerpoCelestial(10, "Rival 10");
-        MonjeDelCuerpoCelestial r2 = new MonjeDelCuerpoCelestial(5, "Rival 5");
-        MonjeDelCuerpoCelestial r3 = new MonjeDelCuerpoCelestial(8, "Rival 8");
+        MonjeDelCuerpoCelestial r1 = new MonjeDelCuerpoCelestial(3, "Rival 3");
+        MonjeDelCuerpoCelestial r2 = new MonjeDelCuerpoCelestial(10, "Rival 10");
+        MonjeDelCuerpoCelestial r3 = new MonjeDelCuerpoCelestial(5, "Rival 5");
+        MonjeDelCuerpoCelestial r4 = new MonjeDelCuerpoCelestial(8, "Rival 8");
 
-        r1.recibirDanio(50); // vida 100
-        r2.recibirDanio(80); // vida 70 (menos vida)
-        r3.recibirDanio(80); // vida 70 (empate en vida con r2, pero r2 tiene id 5 < 8)
+        r1.recibirDanio(1000); // vida 0, no deberia de elegirlo, es rival caido
+        r2.recibirDanio(50); // vida 100
+        r3.recibirDanio(80); // vida 70 (menos vida)
+        r4.recibirDanio(80); // vida 70 (empate en vida con r2, pero r2 tiene id 5 < 8)
 
-        Combatiente elegido = atacante.elegirObjetivoRival(List.of(r1, r2, r3));
-        assertEquals(r2, elegido, "Debe elegir el de menor vida, y ante empate el de menor ID");
+        Combatiente elegido = atacante.elegirObjetivoRival(List.of(r1, r2, r3, r4));
+        assertEquals(r3, elegido, "Debe elegir el de menor vida, y ante empate el de menor ID");
     }
 
     @Test
@@ -183,7 +192,7 @@ class CombatienteTest {
 	}
 
     @Test
-    void reglaDelCompanieroBloqueaTecnicaUsadaHastaQueSeAgotenUsosOCaiga() {
+    void reglaDelCompanieroBloqueaTecnicaUsadaHastaQueSeAgotenUsos() {
         CultivadorDeLaEspada a = new CultivadorDeLaEspada(1, "A");
         MonjeDelCuerpoCelestial b = new MonjeDelCuerpoCelestial(2, "B");
         Pareja pareja = new Pareja(a, b);

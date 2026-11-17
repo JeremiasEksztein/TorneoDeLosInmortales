@@ -26,6 +26,8 @@ class TecnicaYCombatienteTest {
 
 		assertEquals(0, ejecutor.usosRestantes(corte));
 		assertFalse(ejecutor.puedeEjecutar(corte));
+		assertThrows(IllegalStateException.class, () -> corte.ejecutar(ejecutor, companiero));
+		//Tambien se corrobora que se recurra al ataque basico cuando no pueda usar tecnicas
 		assertEquals("Ataque básico", ejecutor.elegirAccion(pareja).getNombre());
 	}
 
@@ -44,6 +46,9 @@ class TecnicaYCombatienteTest {
 		assertEquals(5, ejecutor.getEnergiaActual());
 		assertEquals(5, ejecutor.usosRestantes(rugido));
 		assertFalse(ejecutor.puedeEjecutar(rugido));
+		assertThrows(IllegalStateException.class,() -> rugido.ejecutar(ejecutor, companiero));
+		//Tambien se corrobora que se recurra al ataque basico cuando no pueda usar tecnicas
 		assertEquals("Ataque básico", ejecutor.elegirAccion(pareja).getNombre());
+		
 	}
 }
